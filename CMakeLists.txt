@@ -20,6 +20,7 @@ include/bgk2d/time.hh)
 set(source_files
 src/bgk2d.cc
 src/get_mem.cc
+src/storage.cc
 src/time.cc)
 
 
