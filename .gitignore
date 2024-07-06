@@ -1,3 +1,8 @@
+build/
+.vscode/
+.cache/
+
+# Fortran code
 *.o
 *.mod
 *.x
