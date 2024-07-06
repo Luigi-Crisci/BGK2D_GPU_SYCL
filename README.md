@@ -1,4 +1,64 @@
+# Porting to C++ w/ SYCL
 
+- [ ] Porting to C++
+- [ ] Linearize vectors
+  - [ ] Mdspans?
+
+# File porting status
+- [ ] input.F90
+- [ ] col_MC.F90
+- [ ] bcond.channel.F90
+- [x] precision.F90
+- [ ] probe.F90
+- [ ] init.F90
+- [ ] collision.F90
+- [ ] bcond.inflow.F90
+- [ ] vtk_obstacle.F90
+- [ ] build.obs.F90
+- [x] storage.F90
+  - Ported to struct `Storage`.
+  - Note: Multi-dimensional vector ported as vector of vectors. `Mdspan` could be a solution
+- [ ] draglift.F90
+- [ ] diagno.F90
+- [ ] build.bcond.F90
+- [ ] bgk2d.F90
+- [ ] varm.F90
+- [ ] boundaries.F90
+- [ ] setup.F90
+- [ ] vtk_om.F90
+- [ ] alloca.F90
+- [ ] w.obs.F90
+- [ ] vtk_xy.F90
+- [ ] save_raw.F90
+- [ ] initialize.F90
+- [ ] bcond.obs.F90
+- [ ] hencol.F90
+- [ ] vtk_xy.binary.F90
+- [ ] r.obs.F90
+- [x] get_mem_mod.F90
+	- Deleted, no C binding needed
+- [ ] propagation.F90
+- [ ] profile.F90
+- [ ] col.F90
+- [ ] diagnostic.F90
+- [ ] probe.visc.F90
+- [ ] bcond.driven.F90
+- [ ] prof_i.F90
+- [ ] vtk_visc.binary.F90
+- [ ] check_case.F90
+- [ ] bcond.periodic.F90
+- [ ] vtk_om.binary.F90
+- [ ] movef.F90
+- [ ] prof_j.F90
+- [x] mod_tools.F90
+  - Called `time.hh`
+- [ ] outdat.F90
+- [ ] restore_raw.F90
+- [ ] dealloca.F90
+- [ ] finalize.F90
+- [ ] save.F90
+
+# Old readme
 BGK2D_GPU is a open-source software foe 2D single phase incompressible flows.
 The code was orignally written and developed by:
 
