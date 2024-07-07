@@ -1,3 +1,6 @@
+#ifndef __GET_MEM_H__
+#define __GET_MEM_H__
+
 #include <sys/resource.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -21,3 +24,5 @@
 */
 
 double get_mem();
+
+#endif // __GET_MEM_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PRECISION_H__
+#define __PRECISION_H__
 
 namespace real_kinds {
 
@@ -47,3 +48,4 @@ namespace real_kinds {
 #endif
 
 } // namespace real_kinds
+#endif // __PRECISION_H__

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __STORAGE_H__
+#define __STORAGE_H__
+
 
 #include <array>
 #include <memory>
@@ -113,3 +115,4 @@ struct storage {
 };
 
 } // namespace bgk
+#endif // __STORAGE_H__

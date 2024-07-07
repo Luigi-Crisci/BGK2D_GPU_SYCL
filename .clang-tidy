@@ -24,6 +24,7 @@ Checks: -*,
   -readability-uppercase-literal-suffix,
   -readability-convert-member-functions-to-static
   -readability-qualified-auto
+  -readability-identifier-naming # FIXME: Disable naming checks for now
 
 CheckOptions:
   # Naming conventions
