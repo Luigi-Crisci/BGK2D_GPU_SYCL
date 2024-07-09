@@ -62,7 +62,7 @@ struct file_manager {
 
   public:
     template<typename... Args>
-    void write(uint8_t id, std::string_view format, Args &&...args) {
+    void write_format(uint8_t id, std::string_view format, Args &&...args) {
         using namespace files;
         files[id_to_filename.at(id)] << fmt::format(format, std::forward<Args>(args)...) << "\n";
     }
@@ -72,6 +72,14 @@ struct file_manager {
         using namespace files;
         files[id_to_filename.at(id)] << data << "\n";
     }
+
+    template<typename ...Args>
+    void write(uint8_t id, Args &&...args) {
+        using namespace files;
+        auto& stream = files[id_to_filename.at(id)];
+        (stream << ... << args);
+    }
+
 
     void flush(uint8_t id) { files[id].flush(); }
 

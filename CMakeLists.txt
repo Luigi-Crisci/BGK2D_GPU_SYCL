@@ -34,6 +34,9 @@ include/bgk2d/setup.hh
 include/bgk2d/alloca.hh
 include/bgk2d/input.hh
 include/bgk2d/file_manager.hh
+include/bgk2d/initialize.hh
+include/bgk2d/build_bcond.hh
+include/bgk2d/utils.hh
 include/bgk2d/time.hh)
 
 set(source_files
@@ -44,6 +47,8 @@ src/check_case.cc
 src/alloca.cc
 src/input.cc
 src/setup.cc
+src/initialize.cc
+src/build_bcond.cc
 src/storage.cc
 src/time.cc)
 
