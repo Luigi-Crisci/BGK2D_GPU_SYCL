@@ -5,6 +5,7 @@
 #include <time.hh>
 #include <vtk_obstacle.hh>
 #include "restore_raw.hh"
+#include "varm.hh"
 #include "w_obs.hh"
 #include <init.hh>
 

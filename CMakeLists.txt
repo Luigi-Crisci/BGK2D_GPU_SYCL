@@ -26,31 +26,45 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(frozen)
 
 set(header_files
-include/bgk2d/storage.hh
-include/bgk2d/precision.hh
-include/bgk2d/get_mem.hh
-include/bgk2d/check_case.hh
-include/bgk2d/setup.hh
-include/bgk2d/alloca.hh
-include/bgk2d/input.hh
 include/bgk2d/file_manager.hh
-include/bgk2d/initialize.hh
-include/bgk2d/build_bcond.hh
+include/bgk2d/input.hh
+include/bgk2d/setup.hh
 include/bgk2d/utils.hh
-include/bgk2d/time.hh)
+include/bgk2d/build_obs.hh
+include/bgk2d/init.hh
+include/bgk2d/get_mem.hh
+include/bgk2d/w_obs.hh
+include/bgk2d/time.hh
+include/bgk2d/check_case.hh
+include/bgk2d/build_bcond.hh
+include/bgk2d/vtk_obstacle.hh
+include/bgk2d/initialize.hh
+include/bgk2d/storage.hh
+include/bgk2d/alloca.hh
+include/bgk2d/varm.hh
+include/bgk2d/precision.hh
+include/bgk2d/restore_raw.hh
+)
 
 set(source_files
-src/bgk2d.cc
-src/get_mem.cc
-src/file_manager.cc
-src/check_case.cc
-src/alloca.cc
-src/input.cc
-src/setup.cc
 src/initialize.cc
-src/build_bcond.cc
+src/restore_raw.cc
+src/alloca.cc
+src/build_obs.cc
+src/time.cc
+src/get_mem.cc
+src/setup.cc
+src/file_manager.cc
+src/vtk_obstacle.cc
+src/varm.cc
 src/storage.cc
-src/time.cc)
+src/build_bcond.cc
+src/init.cc
+src/input.cc
+src/bgk2d.cc
+src/check_case.cc
+src/w_obs.cc
+)
 
 
 add_executable(bgk2dSYCL ${header_files} ${source_files})
