@@ -11,9 +11,14 @@
 
 namespace bgk {
 
+namespace files{
+    static constexpr std::string_view input_file = "bgk.input";
+}
+
 namespace debug {
 
 namespace files {
+
 
 static constexpr std::array<frozen::string, 11> filenames = {"time.log", "bgk.log", "prof_i.dat", "probe.dat",
     "task.log", "prof_j.dat", "probe_visc.dat", "drag.lift.dat", "bgk.time.log", "diagno.dat", "u_med.dat"};
@@ -41,16 +46,16 @@ static constexpr frozen::unordered_map<uint8_t, uint8_t, 11> id_to_filename
     Used for debug information
  *
  */
-struct FileManager {
+struct file_manager {
   private:
-    FileManager() {
+    file_manager() {
 #pragma unroll 
         for(int i = 0; i < files.size(); i++) {
             files[i] = std::ofstream(files::filenames[i].data(), std::ios::out | std::ios::trunc);
         }
     }
 
-    ~FileManager() {
+    ~file_manager() {
 #pragma unroll
         for(int i = 0; i < files.size(); i++) { files[i].close(); }
     }
@@ -71,10 +76,13 @@ struct FileManager {
     void flush(uint8_t id) { files[id].flush(); }
 
     static auto &instance() {
-        static FileManager fm{};
+        static file_manager fm{};
         return fm;
     }
 
+    auto& get_file_stream(uint8_t id) { return files[files::id_to_filename.at(id)]; }
+
+private:
     std::array<std::ofstream, 11> files;
 };
 

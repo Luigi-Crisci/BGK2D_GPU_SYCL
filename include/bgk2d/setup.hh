@@ -3,7 +3,7 @@
 
 namespace bgk{
 
-void setup(int itfin, int ivtim, int isignal, int itsave, int icheck, int itrestart, int init_v);
+void setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& itrestart, int& init_v);
 
 } // namespace bgk
 

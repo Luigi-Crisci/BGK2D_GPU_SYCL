@@ -37,8 +37,8 @@ std::string bgk::utils::get_date(){
     auto now = std::chrono::system_clock::now();
     auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
+    std::ostringstream ss;
     // Use std::put_time to format the output similar to the `date` command
-    std::cout << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << std::endl;
-
-    return 0;
+    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+    return ss.str();
 }

@@ -1,7 +1,7 @@
 #ifndef __PRECISION_H__
 #define __PRECISION_H__
 
-namespace real_kinds {
+namespace bgk::real_kinds {
 
 #ifdef HALF_P
     using hp = uint16_t; // Placeholder for half precision

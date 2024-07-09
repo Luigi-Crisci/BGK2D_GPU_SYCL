@@ -84,7 +84,9 @@ struct storage {
 #endif
 
     // Obstacle matrix
-    std::vector<std::vector<int>> obs;
+    // std::vector<std::vector<int>> obs;
+    std::unique_ptr<int[]> _obs;
+    Kokkos::mdspan<int, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> obs;
     int radius;
 
     // Fluid dynamics variables
@@ -110,7 +112,10 @@ struct storage {
 
 
     // Constructor
-    storage(std::size_t l, std::size_t ipad, std::size_t m, std::size_t jpad);
+    storage() = default;
+    // storage(std::size_t l, std::size_t ipad, std::size_t m, std::size_t jpad);
+    //Init
+    void init();
 
 };
 

@@ -29,6 +29,10 @@ set(header_files
 include/bgk2d/storage.hh
 include/bgk2d/precision.hh
 include/bgk2d/get_mem.hh
+include/bgk2d/check_case.hh
+include/bgk2d/setup.hh
+include/bgk2d/alloca.hh
+include/bgk2d/input.hh
 include/bgk2d/file_manager.hh
 include/bgk2d/time.hh)
 
@@ -36,6 +40,10 @@ set(source_files
 src/bgk2d.cc
 src/get_mem.cc
 src/file_manager.cc
+src/check_case.cc
+src/alloca.cc
+src/input.cc
+src/setup.cc
 src/storage.cc
 src/time.cc)
 
