@@ -52,7 +52,6 @@ void initialize(storage &bgk_storage, const int itrestart, const int init_v, con
     build_bcond(bgk_storage);
 
 // build obstacles
-#define OBSTACLE // TODO: REMOVE
 #ifdef OBSTACLE
     build_obs(bgk_storage);
     vtk_obs(bgk_storage);
