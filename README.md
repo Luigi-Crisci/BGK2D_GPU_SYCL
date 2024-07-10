@@ -5,7 +5,7 @@
   - [ ] Mdspans?
 
 # File porting status
-- [ ] input.F90
+- [x] input.F90
 - [ ] col_MC.F90
 - [ ] bcond.channel.F90
 - [x] precision.F90
@@ -24,9 +24,9 @@
 - [ ] bgk2d.F90
 - [ ] varm.F90
 - [ ] boundaries.F90
-- [ ] setup.F90
+- [x] setup.F90
 - [ ] vtk_om.F90
-- [ ] alloca.F90
+- [x] alloca.F90
 - [ ] w.obs.F90
 - [ ] vtk_xy.F90
 - [ ] save_raw.F90
@@ -45,7 +45,7 @@
 - [ ] bcond.driven.F90
 - [ ] prof_i.F90
 - [ ] vtk_visc.binary.F90
-- [ ] check_case.F90
+- [x] check_case.F90
 - [ ] bcond.periodic.F90
 - [ ] vtk_om.binary.F90
 - [ ] movef.F90
