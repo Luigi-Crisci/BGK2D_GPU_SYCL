@@ -4,10 +4,15 @@
 #include <iostream>
 #include <time.hh>
 #include <vtk_obstacle.hh>
+#include "outdat.hh"
+#include "prof_j.hh"
 #include "restore_raw.hh"
 #include "varm.hh"
+#include "vtk_xy_binary.hh"
 #include "w_obs.hh"
 #include <init.hh>
+#include <prof_i.hh>
+#include <hencol.hh>
 
 namespace bgk {
 
@@ -87,19 +92,22 @@ void initialize(storage &bgk_storage, const int itrestart, const int init_v, con
         init(bgk_storage, init_v);
         // diagno(itstart); // Uncomment if needed
         varm(bgk_storage, itstart);
-        prof_i(itstart, bgk_storage.m / 2);
-        prof_j(itstart, bgk_storage.l / 2);
+        prof_i(bgk_storage, itstart, bgk_storage.m / 2);
+        prof_j(bgk_storage, itstart, bgk_storage.l / 2);
 #ifdef NO_BINARY
-        vtk_xy(itstart);
+        vtk_xy(bgk_storage, itstart);
 #else
-        vtk_xy_bin(itstart);
+        vtk_xy_bin(bgk_storage, itstart);
 #endif
     }
 
     // compute collision parameters
-    hencol();
+    hencol(bgk_storage);
 
-    if(bgk_storage.myrank == 0) { outdat(itfin, itstart, ivtim, isignal, itsave, icheck); }
+    if(bgk_storage.myrank == 0)
+    { 
+        outdat(bgk_storage, itfin, itstart, ivtim, isignal, itsave, icheck); 
+    }
 
 #ifdef NO_OUTPUT
 // do nothing

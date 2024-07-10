@@ -1,4 +1,5 @@
 #include <storage.hh>
+#include "initialize.hh"
 #include <time.hh>
 #include <setup.hh>
 
@@ -14,11 +15,13 @@ int main() {
     bgk::utils::time(timing_s.tcountH0);
 
     //setup simulation
-    bgk::setup(itfin, ivtim, isignal, itsave, icheck, itrestart, init_v);
+    auto bgk_storage = bgk::setup(itfin, ivtim, isignal, itsave, icheck, itrestart, init_v);
 
+    //Initialize the flow
+    bgk::initialize(bgk_storage, itrestart,init_v,itfin,itstart,ivtim,isignal,itsave,icheck);
     
 
         
 
-    return `0;
+    return 0;
 }

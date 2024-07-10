@@ -2,8 +2,8 @@
 #include <file_manager.hh>
 namespace bgk {
 
-static constexpr auto format_1003 = "{:5d} {:14.6e} {:14.6e} {:14.6e} ";
-static constexpr auto format_1005 = "# t={:7d}";
+static constexpr char format_1003[sizeof("{:5d} {:14.6e} {:14.6e} {:14.6e}\n")] = "{:5d} {:14.6e} {:14.6e} {:14.6e}\n";
+static constexpr char format_1005[sizeof("# t={:7d}\n")] = "# t={:7d}\n";
 
 void varm(storage &bgk_storage, const int itime) {
     auto u = std::make_unique<real_kinds::mykind[]>(bgk_storage.m); // Mean velocity profiles
@@ -47,9 +47,9 @@ void varm(storage &bgk_storage, const int itime) {
     rvol = 1.0 / static_cast<float>(bgk_storage.l);
 
     auto& file_manager = debug::file_manager::instance();
-    file_manager.write_format(62, format_1005, itime);
+    file_manager.write_format<format_1005>(62, itime);
     for(int j = 0; j < bgk_storage.m; ++j) {
-        file_manager.write_format(62, format_1003,  j+bgk_storage.offset[1], 
+        file_manager.write_format<format_1003>(62,  j+bgk_storage.offset[1], 
         u[j]*rvol,
         w[j]*rvol,
         den[j]*rvol);

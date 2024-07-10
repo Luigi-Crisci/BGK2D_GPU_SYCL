@@ -4,6 +4,9 @@
 - [ ] Linearize vectors
   - [ ] Mdspans?
 
+# Issues to track
+- `write` adds a newline by default, check the porting
+
 # File porting status
 - [ ] input.F90
 - [ ] col_MC.F90
@@ -43,7 +46,8 @@
 - [ ] diagnostic.F90
 - [ ] probe.visc.F90
 - [ ] bcond.driven.F90
-- [ ] prof_i.F90
+- [x] prof_i.F90
+  - `Docouncurrent` statement
 - [ ] vtk_visc.binary.F90
 - [ ] check_case.F90
 - [ ] bcond.periodic.F90
