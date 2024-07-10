@@ -6,3 +6,7 @@ build/
 *.o
 *.mod
 *.x
+
+# simulation output files
+*.dat
+*.log
