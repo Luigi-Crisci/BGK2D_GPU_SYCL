@@ -26,7 +26,7 @@ void readParameters(std::string_view filename, storage &bgk_storage, int &itfin,
     std::ifstream file(filename.data());
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
-        return;
+        std::exit(-1);
     }
 
     std::string line;
@@ -64,7 +64,7 @@ void readParameters(std::string_view filename, storage &bgk_storage, int &itfin,
     // clang-format on
 }
 
-void input(storage& bgk_storage, int itfin, int ivtim, int isignal, int itsave, int icheck, int irestart, int init_v) {
+void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& irestart, int& init_v) {
     // Setting default values
     bgk_storage.flag1 = 0;         // creating obstacles  (1-file/2-creating)
     bgk_storage.flag2 = 0;         // obstacles           (1-sphere/2-cilinder)

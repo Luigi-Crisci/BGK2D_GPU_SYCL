@@ -5,7 +5,7 @@
 
 namespace bgk {
 
-    void input(storage&, int itfin,int ivtim,int isignal,int itsave,int icheck,int irestart, int init_v);
+    void input(storage&, int& itfin,int& ivtim,int& isignal,int& itsave,int& icheck,int& irestart, int& init_v);
 }
 
 #endif // __INPUT_H__
