@@ -11,8 +11,17 @@
 
 namespace bgk {
 
-namespace files{
-    static constexpr std::string_view input_file = "bgk.input";
+namespace utils {
+template<int N>
+struct string_literal_wrapper {
+    constexpr string_literal_wrapper(const char (&s)[N]) { std::copy_n(s, N, value); }
+
+    char value[N];
+};
+} // namespace utils
+
+namespace files {
+static constexpr std::string_view input_file = "bgk.input";
 }
 
 namespace debug {
@@ -49,7 +58,7 @@ static constexpr frozen::unordered_map<uint8_t, uint8_t, 11> id_to_filename
 struct file_manager {
   private:
     file_manager() {
-#pragma unroll 
+#pragma unroll
         for(int i = 0; i < files.size(); i++) {
             files[i] = std::ofstream(files::filenames[i].data(), std::ios::out | std::ios::trunc);
         }
@@ -61,10 +70,11 @@ struct file_manager {
     }
 
   public:
-    template<typename... Args>
-    void write(uint8_t id, std::string_view format, Args &&...args) {
+    template<utils::string_literal_wrapper format_string, typename... Args>
+    void write_format(uint8_t id, Args ...args) {
         using namespace files;
-        files[id_to_filename.at(id)] << fmt::format(format, std::forward<Args>(args)...) << "\n";
+        constexpr auto string = format_string.value;
+        files[id_to_filename.at(id)] << fmt::vformat(string, fmt::make_format_args(args...)) << "\n";
     }
 
     template<typename... Args>
@@ -73,6 +83,14 @@ struct file_manager {
         files[id_to_filename.at(id)] << data << "\n";
     }
 
+    template<typename... Args>
+    void write(uint8_t id, Args &&...args) {
+        using namespace files;
+        auto &stream = files[id_to_filename.at(id)];
+        (stream << ... << args);
+    }
+
+
     void flush(uint8_t id) { files[id].flush(); }
 
     static auto &instance() {
@@ -80,9 +98,9 @@ struct file_manager {
         return fm;
     }
 
-    auto& get_file_stream(uint8_t id) { return files[files::id_to_filename.at(id)]; }
+    auto &get_file_stream(uint8_t id) { return files[files::id_to_filename.at(id)]; }
 
-private:
+  private:
     std::array<std::ofstream, 11> files;
 };
 

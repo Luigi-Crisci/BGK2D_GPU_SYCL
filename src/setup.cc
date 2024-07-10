@@ -1,8 +1,9 @@
+#include <setup.hh>
+
 #include <alloca.hh>
 #include <check_case.hh>
 #include <file_manager.hh>
 #include <input.hh>
-#include <setup.hh>
 #include <storage.hh>
 #include <time.hh>
 
@@ -48,7 +49,7 @@ void print_start_info(const storage &bgk_storage) {
     }
 }
 
-void setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& itrestart, int& init_v) {
+storage setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& itrestart, int& init_v) {
     storage bgk_storage;
     bgk_storage.myrank = 0; // Set values for serial version
 
@@ -78,6 +79,9 @@ void setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& 
         std::cout << "MEM_CHECK: after sub. setup mem = " << mem_stop << std::endl;
     }
 #endif
+
+return bgk_storage;
+
 }
 
 
