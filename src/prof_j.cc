@@ -1,6 +1,8 @@
 #include <prof_j.hh>
 #include <file_manager.hh>
 
+#include <sycl/sycl.hpp>
+
 namespace bgk{
 
     static constexpr char format_1005[sizeof("# t={:7d}\n")] = "# t={:7d}\n";
@@ -20,27 +22,78 @@ namespace bgk{
     cte1 = storage::uno;
 #endif
 
-    //TODO: THOSE WERE DOCOUNCURRENT. PORT THIS TO SYCL
+    sycl::queue q{sycl::cpu_selector{}};
+    // for (int j = 0; j < bgk_storage.m; ++j) {
+    //     den[j] = (bgk_storage.a01(icoord,j) + bgk_storage.a03(icoord,j) + bgk_storage.a05(icoord,j) +
+    //               bgk_storage.a08(icoord,j) + bgk_storage.a10(icoord,j) + bgk_storage.a12(icoord,j) +
+    //               bgk_storage.a14(icoord,j) + bgk_storage.a17(icoord,j) + bgk_storage.a19(icoord,j)) + cte1;
+    // }
+
     // Density calculation
-    for (int j = 0; j < bgk_storage.m; ++j) {
-        den[j] = (bgk_storage.a01(icoord,j) + bgk_storage.a03(icoord,j) + bgk_storage.a05(icoord,j) +
-                  bgk_storage.a08(icoord,j) + bgk_storage.a10(icoord,j) + bgk_storage.a12(icoord,j) +
-                  bgk_storage.a14(icoord,j) + bgk_storage.a17(icoord,j) + bgk_storage.a19(icoord,j)) + cte1;
-    }
+    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+        den = den.data(),
+        icoord,
+        cte1,
+        a01 = bgk_storage.a01,
+        a03 = bgk_storage.a03,
+        a05 = bgk_storage.a05,
+        a08 = bgk_storage.a08,
+        a10 = bgk_storage.a10,
+        a12 = bgk_storage.a12,
+        a14 = bgk_storage.a14,
+        a17 = bgk_storage.a17,
+        a19 = bgk_storage.a19
+    ](sycl::item<1> idx) {
+        const auto j = idx.get_linear_id();
+        den[j] = (a01(icoord,j) + a03(icoord,j) + a05(icoord,j) + a08(icoord,j) + a10(icoord,j) + a12(icoord,j)
+                     + a14(icoord,j) + a17(icoord,j) + a19(icoord,j))
+            + cte1;
+    }).wait_and_throw();
+
+
 
     // Streamwise velocity calculation
-    for (int j = 0; j < bgk_storage.m; ++j) {
-        u[j] = (bgk_storage.a01(icoord,j) - bgk_storage.a10(icoord,j) +
-                bgk_storage.a03(icoord,j) - bgk_storage.a12(icoord,j) +
-                bgk_storage.a05(icoord,j) - bgk_storage.a14(icoord,j)) / den[j];
-    }
+    // for (int j = 0; j < bgk_storage.m; ++j) {
+    //     u[j] = (bgk_storage.a01(icoord,j) - bgk_storage.a10(icoord,j) +
+    //             bgk_storage.a03(icoord,j) - bgk_storage.a12(icoord,j) +
+    //             bgk_storage.a05(icoord,j) - bgk_storage.a14(icoord,j)) / den[j];
+    // }
+    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+        u = u.data(),
+        icoord,
+        den = den.data(),
+        a01 = bgk_storage.a01,
+        a03 = bgk_storage.a03,
+        a05 = bgk_storage.a05,
+        a10 = bgk_storage.a10,
+        a12 = bgk_storage.a12,
+        a14 = bgk_storage.a14
+    ](sycl::item<1> idx) {
+        const auto j = idx.get_linear_id();
+        u[j] = (a01(icoord,j) - a10(icoord,j) + a03(icoord,j) - a12(icoord,j) + a05(icoord,j) - a14(icoord,j)) / den[j];
+    }).wait_and_throw();
+    
 
     // Normal-to-wall velocity calculation
-    for (int j = 0; j < bgk_storage.m; ++j) {
-        v[j] = (bgk_storage.a03(icoord,j) - bgk_storage.a01(icoord,j) +
-                bgk_storage.a08(icoord,j) - bgk_storage.a17(icoord,j) +
-                bgk_storage.a12(icoord,j) - bgk_storage.a10(icoord,j)) / den[j];
-    }
+    // for (int j = 0; j < bgk_storage.m; ++j) {
+    //     v[j] = (bgk_storage.a03(icoord,j) - bgk_storage.a01(icoord,j) +
+    //             bgk_storage.a08(icoord,j) - bgk_storage.a17(icoord,j) +
+    //             bgk_storage.a12(icoord,j) - bgk_storage.a10(icoord,j)) / den[j];
+    // }
+    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+        v = v.data(),
+        icoord,
+        den = den.data(),
+        a01 = bgk_storage.a01,
+        a03 = bgk_storage.a03,
+        a08 = bgk_storage.a08,
+        a10 = bgk_storage.a10,
+        a12 = bgk_storage.a12,
+        a17 = bgk_storage.a17
+    ](sycl::item<1> idx) {
+        const auto j = idx.get_linear_id();
+        v[j] = (a03(icoord,j) - a01(icoord,j) + a08(icoord,j) - a17(icoord,j) + a12(icoord,j) - a10(icoord,j)) / den[j];
+    }).wait_and_throw();
 
     // Write itime
     auto& file_manager = debug::file_manager::instance();
