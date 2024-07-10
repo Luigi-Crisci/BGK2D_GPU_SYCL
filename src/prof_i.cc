@@ -44,7 +44,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
 
     // Write data
     for(int i = 0; i < bgk_storage.l; ++i) {
-        file_manager.write_format<format_1002>(61, u[i], v[i], den[i]);
+        file_manager.write_format<format_1002>(61, (i-0.5), u[i], v[i], den[i]);
     }
 
     // Write empty lines
