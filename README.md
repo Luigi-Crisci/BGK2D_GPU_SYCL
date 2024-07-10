@@ -13,10 +13,10 @@
 - [ ] bcond.channel.F90
 - [x] precision.F90
 - [ ] probe.F90
-- [ ] init.F90
+- [x] init.F90
 - [ ] collision.F90
 - [ ] bcond.inflow.F90
-- [ ] vtk_obstacle.F90
+- [x] vtk_obstacle.F90
 - [ ] build.obs.F90
 - [x] storage.F90
   - Ported to struct `Storage`.
@@ -25,18 +25,18 @@
 - [ ] diagno.F90
 - [ ] build.bcond.F90
 - [ ] bgk2d.F90
-- [ ] varm.F90
+- [x] varm.F90
 - [ ] boundaries.F90
 - [x] setup.F90
 - [ ] vtk_om.F90
 - [x] alloca.F90
-- [ ] w.obs.F90
-- [ ] vtk_xy.F90
-- [ ] save_raw.F90
+- [x] w.obs.F90
+- [x] vtk_xy.F90
+- [x] save_raw.F90
 - [ ] initialize.F90
 - [ ] bcond.obs.F90
-- [ ] hencol.F90
-- [ ] vtk_xy.binary.F90
+- [x] hencol.F90
+- [x] vtk_xy.binary.F90
 - [ ] r.obs.F90
 - [x] get_mem_mod.F90
 	- Deleted, no C binding needed
@@ -53,7 +53,7 @@
 - [ ] bcond.periodic.F90
 - [ ] vtk_om.binary.F90
 - [ ] movef.F90
-- [ ] prof_j.F90
+- [x] prof_j.F90
 - [x] mod_tools.F90
   - Called `time.hh`
 - [ ] outdat.F90
