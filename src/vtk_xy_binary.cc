@@ -45,9 +45,9 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     std::ofstream bin_file(file_name, std::ios::out | std::ios::binary | std::ios::app);
     for (int j = 1; j <= bgk_storage.m; ++j) {
         for (int i = 1; i <= bgk_storage.l; ++i) {
-            u = bgk_storage.a01(i,j) + bgk_storage.a03(i,j) + bgk_storage.a05(i,j) - bgk_storage.a10(i,j) - bgk_storage.a12(i,j) - bgk_storage.a14(i,j);
-            w = bgk_storage.a03(i,j) + bgk_storage.a08(i,j) + bgk_storage.a12(i,j) - bgk_storage.a01(i,j) - bgk_storage.a10(i,j) - bgk_storage.a17(i,j);
-            den = bgk_storage.a01(i,j) + bgk_storage.a03(i,j) + bgk_storage.a05(i,j) + bgk_storage.a08(i,j) + bgk_storage.a10(i,j) + bgk_storage.a12(i,j) + bgk_storage.a14(i,j) + bgk_storage.a17(i,j) + bgk_storage.a19(i,j) + cte1;
+            u = bgk_storage.a01_host(i,j) + bgk_storage.a03_host(i,j) + bgk_storage.a05_host(i,j) - bgk_storage.a10_host(i,j) - bgk_storage.a12_host(i,j) - bgk_storage.a14_host(i,j);
+            w = bgk_storage.a03_host(i,j) + bgk_storage.a08_host(i,j) + bgk_storage.a12_host(i,j) - bgk_storage.a01_host(i,j) - bgk_storage.a10_host(i,j) - bgk_storage.a17_host(i,j);
+            den = bgk_storage.a01_host(i,j) + bgk_storage.a03_host(i,j) + bgk_storage.a05_host(i,j) + bgk_storage.a08_host(i,j) + bgk_storage.a10_host(i,j) + bgk_storage.a12_host(i,j) + bgk_storage.a14_host(i,j) + bgk_storage.a17_host(i,j) + bgk_storage.a19_host(i,j) + cte1;
             const auto u_den = u / den;
             const auto w_den = w / den;
             bin_file.write(reinterpret_cast<const char*>(&u_den), sizeof(u_den));
@@ -66,7 +66,7 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     bin_file.open(file_name, std::ios::out | std::ios::binary | std::ios::app);
     for (int j = 1; j <= bgk_storage.m; ++j) {
         for (int i = 1; i <= bgk_storage.l; ++i) {
-            w = bgk_storage.a03(i,j) + bgk_storage.a08(i,j) + bgk_storage.a12(i,j) - bgk_storage.a01(i,j) - bgk_storage.a10(i,j) - bgk_storage.a17(i,j);
+            w = bgk_storage.a03_host(i,j) + bgk_storage.a08_host(i,j) + bgk_storage.a12_host(i,j) - bgk_storage.a01_host(i,j) - bgk_storage.a10_host(i,j) - bgk_storage.a17_host(i,j);
             const auto w_den = w / den;
             bin_file.write(reinterpret_cast<const char*>(&w_den), sizeof(w_den));
         }
@@ -82,7 +82,7 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     bin_file.open(file_name, std::ios::out | std::ios::binary | std::ios::app);
     for (int j = 1; j <= bgk_storage.m; ++j) {
         for (int i = 1; i <= bgk_storage.l; ++i) {
-            u = bgk_storage.a01(i,j) + bgk_storage.a03(i,j) + bgk_storage.a05(i,j) - bgk_storage.a10(i,j) - bgk_storage.a12(i,j) - bgk_storage.a14(i,j);
+            u = bgk_storage.a01_host(i,j) + bgk_storage.a03_host(i,j) + bgk_storage.a05_host(i,j) - bgk_storage.a10_host(i,j) - bgk_storage.a12_host(i,j) - bgk_storage.a14_host(i,j);
             const auto u_den = u / den;
             bin_file.write(reinterpret_cast<const char*>(&u_den), sizeof(u_den));
         }
@@ -98,7 +98,7 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     bin_file.open(file_name, std::ios::out | std::ios::binary | std::ios::app);
     for (int j = 1; j <= bgk_storage.m; ++j) {
         for (int i = 1; i <= bgk_storage.l; ++i) {
-            den = bgk_storage.a01(i,j) + bgk_storage.a03(i,j) + bgk_storage.a05(i,j) + bgk_storage.a08(i,j) + bgk_storage.a10(i,j) + bgk_storage.a12(i,j) + bgk_storage.a14(i,j) + bgk_storage.a17(i,j) + bgk_storage.a19(i,j) + cte1;
+            den = bgk_storage.a01_host(i,j) + bgk_storage.a03_host(i,j) + bgk_storage.a05_host(i,j) + bgk_storage.a08_host(i,j) + bgk_storage.a10_host(i,j) + bgk_storage.a12_host(i,j) + bgk_storage.a14_host(i,j) + bgk_storage.a17_host(i,j) + bgk_storage.a19_host(i,j) + cte1;
             bin_file.write(reinterpret_cast<char*>(&den), sizeof(den));
         }
     }

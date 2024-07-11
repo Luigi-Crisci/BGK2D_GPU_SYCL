@@ -90,15 +90,15 @@ void init(storage &bgk_storage, const int opt) {
             cx17 = storage::rf * (-yj) + storage::qf * (3.0 * yj * yj - cvsq);
             cx19 = storage::rf * 0.0 + storage::qf * (3.0 * 0.0 * 0.0 - cvsq);
 
-            bgk_storage.a01(i,j) = crho * storage::p2 * (cte1 + cx01);
-            bgk_storage.a03(i,j) = crho * storage::p2 * (cte1 + cx03);
-            bgk_storage.a05(i,j) = crho * storage::p1 * (cte1 + cx05);
-            bgk_storage.a08(i,j) = crho * storage::p1 * (cte1 + cx08);
-            bgk_storage.a10(i,j) = crho * storage::p2 * (cte1 + cx10);
-            bgk_storage.a12(i,j) = crho * storage::p2 * (cte1 + cx12);
-            bgk_storage.a14(i,j) = crho * storage::p1 * (cte1 + cx14);
-            bgk_storage.a17(i,j) = crho * storage::p1 * (cte1 + cx17);
-            bgk_storage.a19(i,j) = crho * storage::p0 * (cte1 + cx19);
+            bgk_storage.a01_host(i,j) = crho * storage::p2 * (cte1 + cx01);
+            bgk_storage.a03_host(i,j) = crho * storage::p2 * (cte1 + cx03);
+            bgk_storage.a05_host(i,j) = crho * storage::p1 * (cte1 + cx05);
+            bgk_storage.a08_host(i,j) = crho * storage::p1 * (cte1 + cx08);
+            bgk_storage.a10_host(i,j) = crho * storage::p2 * (cte1 + cx10);
+            bgk_storage.a12_host(i,j) = crho * storage::p2 * (cte1 + cx12);
+            bgk_storage.a14_host(i,j) = crho * storage::p1 * (cte1 + cx14);
+            bgk_storage.a17_host(i,j) = crho * storage::p1 * (cte1 + cx17);
+            bgk_storage.a19_host(i,j) = crho * storage::p0 * (cte1 + cx19);
         }
     }
 

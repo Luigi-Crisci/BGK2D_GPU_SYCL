@@ -1,6 +1,7 @@
 build/
 .vscode/
 .cache/
+.clangd
 
 # Fortran code
 *.o
@@ -10,3 +11,4 @@ build/
 # simulation output files
 *.dat
 *.log
+*.vtk

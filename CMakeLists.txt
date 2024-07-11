@@ -75,71 +75,73 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
 		  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl-targets=${LZ_ARCH}")
 		endif()
 	endif()
-
-elseif(SYCL_IMPL STREQUAL "triSYCL")
-	find_package(TriSYCL MODULE REQUIRED)
 endif()
 
-# Enable colored output for Ninja
-if(CMAKE_GENERATOR STREQUAL "Ninja")
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    add_compile_options(-fdiagnostics-color=always)
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compile_options(/experimental:color)
-  endif()
+set(USE_MALLOC_SHARED "" CACHE BOOL "Use malloc_shared for SYCL buffers")
+if (USE_MALLOC_SHARED)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_MALLOC_SHARED")
+else()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_MALLOC_DEVICE")
 endif()
+
 
 set(header_files
-include/bgk2d/prof_j.hh
-include/bgk2d/vtk_xy.hh
-include/bgk2d/file_manager.hh
-include/bgk2d/vtk_xy_binary.hh
-include/bgk2d/input.hh
-include/bgk2d/setup.hh
-include/bgk2d/utils.hh
-include/bgk2d/build_obs.hh
 include/bgk2d/init.hh
-include/bgk2d/get_mem.hh
-include/bgk2d/w_obs.hh
-include/bgk2d/time.hh
-include/bgk2d/check_case.hh
-include/bgk2d/hencol.hh
-include/bgk2d/build_bcond.hh
+include/bgk2d/file_manager.hh
 include/bgk2d/vtk_obstacle.hh
+include/bgk2d/hencol.hh
+include/bgk2d/utils.hh
+include/bgk2d/input.hh
+include/bgk2d/boundaries.hh
+include/bgk2d/build_bcond.hh
 include/bgk2d/prof_i.hh
 include/bgk2d/initialize.hh
-include/bgk2d/outdat.hh
-include/bgk2d/storage.hh
-include/bgk2d/alloca.hh
-include/bgk2d/varm.hh
+include/bgk2d/setup.hh
+include/bgk2d/sycl
+include/bgk2d/sycl/usm_buffer.hh
 include/bgk2d/precision.hh
+include/bgk2d/prof_j.hh
+include/bgk2d/get_mem.hh
+include/bgk2d/build_obs.hh
+include/bgk2d/time.hh
+include/bgk2d/storage.hh
+include/bgk2d/outdat.hh
+include/bgk2d/w_obs.hh
+include/bgk2d/vtk_xy_binary.hh
+include/bgk2d/varm.hh
+include/bgk2d/vtk_xy.hh
+include/bgk2d/check_case.hh
 include/bgk2d/restore_raw.hh
+include/bgk2d/bcond_driven.hh
+include/bgk2d/alloca.hh
 )
 
 set(source_files
-src/initialize.cc
-src/restore_raw.cc
-src/alloca.cc
-src/build_obs.cc
-src/time.cc
-src/get_mem.cc
-src/setup.cc
-src/vtk_xy.cc
-src/file_manager.cc
-src/outdat.cc
-src/vtk_obstacle.cc
-src/prof_j.cc
-src/prof_i.cc
-src/hencol.cc
-src/varm.cc
 src/storage.cc
-src/build_bcond.cc
-src/init.cc
-src/vtk_xy_binary.cc
-src/input.cc
-src/bgk2d.cc
-src/check_case.cc
+src/varm.cc
+src/setup.cc
 src/w_obs.cc
+src/vtk_xy.cc
+src/alloca.cc
+src/time.cc
+src/build_bcond.cc
+src/bgk2d.cc
+src/outdat.cc
+src/hencol.cc
+src/get_mem.cc
+src/bcond_driven.cc
+src/vtk_obstacle.cc
+src/check_case.cc
+src/file_manager.cc
+src/vtk_xy_binary.cc
+src/boundaries.cc
+src/input.cc
+src/restore_raw.cc
+src/initialize.cc
+src/init.cc
+src/build_obs.cc
+src/prof_i.cc
+src/prof_j.cc
 )
 
 
@@ -158,3 +160,12 @@ get_property(
   
 target_include_directories(bgk2dSYCL PUBLIC include/bgk2d ${mdspan_INCLUDE_DIRS} ${frozen_INCLUDE_DIRS})
 target_link_libraries(bgk2dSYCL fmt::fmt)
+
+# Enable colored output for Ninja
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(-fdiagnostics-color=always)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    add_compile_options(/experimental:color)
+  endif()
+endif()

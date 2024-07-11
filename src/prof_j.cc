@@ -24,9 +24,9 @@ namespace bgk{
 
     sycl::queue q{sycl::cpu_selector{}};
     // for (int j = 0; j < bgk_storage.m; ++j) {
-    //     den[j] = (bgk_storage.a01(icoord,j) + bgk_storage.a03(icoord,j) + bgk_storage.a05(icoord,j) +
-    //               bgk_storage.a08(icoord,j) + bgk_storage.a10(icoord,j) + bgk_storage.a12(icoord,j) +
-    //               bgk_storage.a14(icoord,j) + bgk_storage.a17(icoord,j) + bgk_storage.a19(icoord,j)) + cte1;
+    //     den[j] = (bgk_storage.a01_host(icoord,j) + bgk_storage.a03_host(icoord,j) + bgk_storage.a05_host(icoord,j) +
+    //               bgk_storage.a08_host(icoord,j) + bgk_storage.a10_host(icoord,j) + bgk_storage.a12_host(icoord,j) +
+    //               bgk_storage.a14_host(icoord,j) + bgk_storage.a17_host(icoord,j) + bgk_storage.a19_host(icoord,j)) + cte1;
     // }
 
     // Density calculation
@@ -34,15 +34,15 @@ namespace bgk{
         den = den.data(),
         icoord,
         cte1,
-        a01 = bgk_storage.a01,
-        a03 = bgk_storage.a03,
-        a05 = bgk_storage.a05,
-        a08 = bgk_storage.a08,
-        a10 = bgk_storage.a10,
-        a12 = bgk_storage.a12,
-        a14 = bgk_storage.a14,
-        a17 = bgk_storage.a17,
-        a19 = bgk_storage.a19
+        a01 = bgk_storage.a01_host,
+        a03 = bgk_storage.a03_host,
+        a05 = bgk_storage.a05_host,
+        a08 = bgk_storage.a08_host,
+        a10 = bgk_storage.a10_host,
+        a12 = bgk_storage.a12_host,
+        a14 = bgk_storage.a14_host,
+        a17 = bgk_storage.a17_host,
+        a19 = bgk_storage.a19_host
     ](sycl::item<1> idx) {
         const auto j = idx.get_linear_id();
         den[j] = (a01(icoord,j) + a03(icoord,j) + a05(icoord,j) + a08(icoord,j) + a10(icoord,j) + a12(icoord,j)
@@ -54,20 +54,20 @@ namespace bgk{
 
     // Streamwise velocity calculation
     // for (int j = 0; j < bgk_storage.m; ++j) {
-    //     u[j] = (bgk_storage.a01(icoord,j) - bgk_storage.a10(icoord,j) +
-    //             bgk_storage.a03(icoord,j) - bgk_storage.a12(icoord,j) +
-    //             bgk_storage.a05(icoord,j) - bgk_storage.a14(icoord,j)) / den[j];
+    //     u[j] = (bgk_storage.a01_host(icoord,j) - bgk_storage.a10_host(icoord,j) +
+    //             bgk_storage.a03_host(icoord,j) - bgk_storage.a12_host(icoord,j) +
+    //             bgk_storage.a05_host(icoord,j) - bgk_storage.a14_host(icoord,j)) / den[j];
     // }
     q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
         u = u.data(),
         icoord,
         den = den.data(),
-        a01 = bgk_storage.a01,
-        a03 = bgk_storage.a03,
-        a05 = bgk_storage.a05,
-        a10 = bgk_storage.a10,
-        a12 = bgk_storage.a12,
-        a14 = bgk_storage.a14
+        a01 = bgk_storage.a01_host,
+        a03 = bgk_storage.a03_host,
+        a05 = bgk_storage.a05_host,
+        a10 = bgk_storage.a10_host,
+        a12 = bgk_storage.a12_host,
+        a14 = bgk_storage.a14_host
     ](sycl::item<1> idx) {
         const auto j = idx.get_linear_id();
         u[j] = (a01(icoord,j) - a10(icoord,j) + a03(icoord,j) - a12(icoord,j) + a05(icoord,j) - a14(icoord,j)) / den[j];
@@ -76,20 +76,20 @@ namespace bgk{
 
     // Normal-to-wall velocity calculation
     // for (int j = 0; j < bgk_storage.m; ++j) {
-    //     v[j] = (bgk_storage.a03(icoord,j) - bgk_storage.a01(icoord,j) +
-    //             bgk_storage.a08(icoord,j) - bgk_storage.a17(icoord,j) +
-    //             bgk_storage.a12(icoord,j) - bgk_storage.a10(icoord,j)) / den[j];
+    //     v[j] = (bgk_storage.a03_host(icoord,j) - bgk_storage.a01_host(icoord,j) +
+    //             bgk_storage.a08_host(icoord,j) - bgk_storage.a17_host(icoord,j) +
+    //             bgk_storage.a12_host(icoord,j) - bgk_storage.a10_host(icoord,j)) / den[j];
     // }
     q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
         v = v.data(),
         icoord,
         den = den.data(),
-        a01 = bgk_storage.a01,
-        a03 = bgk_storage.a03,
-        a08 = bgk_storage.a08,
-        a10 = bgk_storage.a10,
-        a12 = bgk_storage.a12,
-        a17 = bgk_storage.a17
+        a01 = bgk_storage.a01_host,
+        a03 = bgk_storage.a03_host,
+        a08 = bgk_storage.a08_host,
+        a10 = bgk_storage.a10_host,
+        a12 = bgk_storage.a12_host,
+        a17 = bgk_storage.a17_host
     ](sycl::item<1> idx) {
         const auto j = idx.get_linear_id();
         v[j] = (a03(icoord,j) - a01(icoord,j) + a08(icoord,j) - a17(icoord,j) + a12(icoord,j) - a10(icoord,j)) / den[j];

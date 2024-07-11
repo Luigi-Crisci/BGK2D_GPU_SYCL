@@ -47,7 +47,7 @@ void vtk_obs(storage &bgk_storage) {
     file << "SCALARS obs float" << std::endl;
     file << "LOOKUP_TABLE default" << std::endl;
     for(int j = 1; j <= bgk_storage.m; ++j) {
-        for(int i = 1; i <= bgk_storage.l; ++i) { file << bgk_storage.obs(i - 1, j - 1) * 1.0 << std::endl; }
+        for(int i = 1; i <= bgk_storage.l; ++i) { file << bgk_storage.obs_host(i - 1, j - 1) * 1.0 << std::endl; }
     }
 
     std::cout << "INFO: obs vtk dump done" << std::endl;

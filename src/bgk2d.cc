@@ -11,6 +11,7 @@ int main() {
     int itfin, itstart, ivtim;
     int itime, itsave, icheck, itrestart, init_v;
     int isignal;
+    
     auto &file_manager = bgk::debug::file_manager::instance();
     // Setup simulation
     auto &timing_s = bgk::utils::timing::instance();

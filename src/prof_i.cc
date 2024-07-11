@@ -26,8 +26,8 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     sycl::queue q{sycl::cpu_selector{}};
 
     // for(int i = 0; i < bgk_storage.l; ++i) {
-    //     den[i] = (bgk_storage.a01(i,jcoord) + bgk_storage.a03(i,jcoord) + bgk_storage.a05(i,jcoord) + bgk_storage.a08(i,jcoord) + bgk_storage.a10(i,jcoord) + bgk_storage.a12(i,jcoord)
-    //                  + bgk_storage.a14(i,jcoord) + bgk_storage.a17(i,jcoord) + bgk_storage.a19(i,jcoord))
+    //     den[i] = (bgk_storage.a01_host(i,jcoord) + bgk_storage.a03_host(i,jcoord) + bgk_storage.a05_host(i,jcoord) + bgk_storage.a08_host(i,jcoord) + bgk_storage.a10(i,jcoord) + bgk_storage.a12_host(i,jcoord)
+    //                  + bgk_storage.a14_host(i,jcoord) + bgk_storage.a17(i,jcoord) + bgk_storage.a19(i,jcoord))
     //         + cte1;
     // }
     
@@ -35,15 +35,15 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     den = den.data(),
     jcoord,
     cte1,
-    a01 = bgk_storage.a01,
-    a03 = bgk_storage.a03,
-    a05 = bgk_storage.a05,
-    a08 = bgk_storage.a08,
-    a10 = bgk_storage.a10,
-    a12 = bgk_storage.a12,
-    a14 = bgk_storage.a14,
-    a17 = bgk_storage.a17,
-    a19 = bgk_storage.a19
+    a01 = bgk_storage.a01_host,
+    a03 = bgk_storage.a03_host,
+    a05 = bgk_storage.a05_host,
+    a08 = bgk_storage.a08_host,
+    a10 = bgk_storage.a10_host,
+    a12 = bgk_storage.a12_host,
+    a14 = bgk_storage.a14_host,
+    a17 = bgk_storage.a17_host,
+    a19 = bgk_storage.a19_host
     ](sycl::item<1> idx) {
         const auto i = idx.get_linear_id();
         den[i] = (a01(i,jcoord) + a03(i,jcoord) + a05(i,jcoord) + a08(i,jcoord) + a10(i,jcoord) + a12(i,jcoord)
@@ -54,20 +54,20 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     
     // Streamwise velocity calculation
     // for(int i = 0; i < bgk_storage.l; ++i) {
-    //     u[i] = (bgk_storage.a01(i,jcoord) + bgk_storage.a03(i,jcoord) + bgk_storage.a05(i,jcoord) - bgk_storage.a10(i,jcoord) - bgk_storage.a12(i,jcoord) - bgk_storage.a14(i,jcoord))
+    //     u[i] = (bgk_storage.a01_host(i,jcoord) + bgk_storage.a03_host(i,jcoord) + bgk_storage.a05_host(i,jcoord) - bgk_storage.a10_host(i,jcoord) - bgk_storage.a12(i,jcoord) - bgk_storage.a14(i,jcoord))
     //         / den[i];
     // }
     // Streamwise velocity calculation
     q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.l)}, [
     u = u.data(),
     jcoord,
-    den,
-    a01 = bgk_storage.a01,
-    a03 = bgk_storage.a03,
-    a05 = bgk_storage.a05,
-    a10 = bgk_storage.a10,
-    a12 = bgk_storage.a12,
-    a14 = bgk_storage.a14
+    den = den.data(),
+    a01 = bgk_storage.a01_host,
+    a03 = bgk_storage.a03_host,
+    a05 = bgk_storage.a05_host,
+    a10 = bgk_storage.a10_host,
+    a12 = bgk_storage.a12_host,
+    a14 = bgk_storage.a14_host
     ](sycl::item<1> idx) {
         const auto i = idx.get_linear_id();
         u[i] = (a01(i,jcoord) + a03(i,jcoord) + a05(i,jcoord) - a10(i,jcoord) - a12(i,jcoord) - a14(i,jcoord))
@@ -77,19 +77,19 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
 
     // Normal-to-wall velocity calculation
     // for(int i = 0; i < bgk_storage.l; ++i) {
-    //     v[i] = (bgk_storage.a03(i,jcoord) + bgk_storage.a08(i,jcoord) + bgk_storage.a12(i,jcoord) - bgk_storage.a01(i,jcoord) - bgk_storage.a10(i,jcoord) - bgk_storage.a17(i,jcoord))
+    //     v[i] = (bgk_storage.a03_host(i,jcoord) + bgk_storage.a08_host(i,jcoord) + bgk_storage.a12_host(i,jcoord) - bgk_storage.a01_host(i,jcoord) - bgk_storage.a10(i,jcoord) - bgk_storage.a17(i,jcoord))
     //         / den[i];
     // }
     q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.l)}, [
     v = v.data(),
     jcoord,
-    den,
-    a01 = bgk_storage.a01,
-    a03 = bgk_storage.a03,
-    a08 = bgk_storage.a08,
-    a10 = bgk_storage.a10,
-    a12 = bgk_storage.a12,
-    a17 = bgk_storage.a17
+    den = den.data(),
+    a01 = bgk_storage.a01_host,
+    a03 = bgk_storage.a03_host,
+    a08 = bgk_storage.a08_host,
+    a10 = bgk_storage.a10_host,
+    a12 = bgk_storage.a12_host,
+    a17 = bgk_storage.a17_host
     ](sycl::item<1> idx) {
         const auto i = idx.get_linear_id();
         v[i] = (a03(i,jcoord) + a08(i,jcoord) + a12(i,jcoord) - a01(i,jcoord) - a10(i,jcoord) - a17(i,jcoord))

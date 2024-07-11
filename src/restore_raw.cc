@@ -24,47 +24,47 @@ namespace bgk{
 
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a01(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a01_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a03(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a03_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a05(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a05_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a08(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a08_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a10(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a10_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a12(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a12_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a14(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a14_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a17(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a17_host(i,j)), sizeof(double));
         }
     }
     for (int j = 0; j <= bgk_storage.m1; ++j) {
         for (int i = 0; i <= bgk_storage.l1; ++i) {
-            file.read(reinterpret_cast<char*>(&bgk_storage.a19(i,j)), sizeof(double));
+            file.read(reinterpret_cast<char*>(&bgk_storage.a19_host(i,j)), sizeof(double));
         }
     }
 

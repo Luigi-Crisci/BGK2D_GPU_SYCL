@@ -103,7 +103,7 @@ void build_obs(storage &bgk_storage) {
             double d2 = (icoord - i) * (icoord - i) + (jcoord - j) * (jcoord - j);
 
             if(d2 > R2a && d2 < R2b) {
-                bgk_storage.obs(i, j) = 1;
+                bgk_storage.obs_host(i, j) = 1;
                 bgk_storage.nobs += 1;
 
                 bgk_storage.imin = std::min(bgk_storage.imin, i);

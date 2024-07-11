@@ -50,6 +50,7 @@ void print_start_info(const storage &bgk_storage) {
 }
 
 storage setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, int& itrestart, int& init_v) {
+    
     storage bgk_storage;
     bgk_storage.myrank = 0; // Set values for serial version
 

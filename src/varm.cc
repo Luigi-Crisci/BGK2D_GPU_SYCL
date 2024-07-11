@@ -26,20 +26,20 @@ void varm(storage &bgk_storage, const int itime) {
 
     for(int j = 0; j < bgk_storage.m; ++j) {
         for(int i = 0; i < bgk_storage.l; ++i) {
-            rho = (bgk_storage.a01(i, j) + bgk_storage.a03(i, j) + bgk_storage.a05(i, j) + bgk_storage.a08(i, j)
-                      + bgk_storage.a10(i, j) + bgk_storage.a12(i, j) + bgk_storage.a14(i, j) + bgk_storage.a17(i, j)
-                      + bgk_storage.a19(i, j))
+            rho = (bgk_storage.a01_host(i, j) + bgk_storage.a03_host(i, j) + bgk_storage.a05_host(i, j) + bgk_storage.a08_host(i, j)
+                      + bgk_storage.a10_host(i, j) + bgk_storage.a12_host(i, j) + bgk_storage.a14_host(i, j) + bgk_storage.a17_host(i, j)
+                      + bgk_storage.a19_host(i, j))
                 + cte1;
 
             rhoinv = storage::uno / rho;
 
             den[j] += rho;
 
-            u[j] += (bgk_storage.a01(i, j) + bgk_storage.a03(i, j) + bgk_storage.a05(i, j) - bgk_storage.a10(i, j)
-                        - bgk_storage.a12(i, j) - bgk_storage.a14(i, j))
+            u[j] += (bgk_storage.a01_host(i, j) + bgk_storage.a03_host(i, j) + bgk_storage.a05_host(i, j) - bgk_storage.a10_host(i, j)
+                        - bgk_storage.a12_host(i, j) - bgk_storage.a14_host(i, j))
                 * rhoinv;
-            w[j] += (bgk_storage.a03(i, j) + bgk_storage.a08(i, j) + bgk_storage.a12(i, j) - bgk_storage.a01(i, j)
-                        - bgk_storage.a10(i, j) - bgk_storage.a17(i, j))
+            w[j] += (bgk_storage.a03_host(i, j) + bgk_storage.a08_host(i, j) + bgk_storage.a12_host(i, j) - bgk_storage.a01_host(i, j)
+                        - bgk_storage.a10_host(i, j) - bgk_storage.a17_host(i, j))
                 * rhoinv;
         }
     }
