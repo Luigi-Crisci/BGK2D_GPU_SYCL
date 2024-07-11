@@ -24,11 +24,12 @@ int main() {
     // Initialize the flow
     bgk::initialize(bgk_storage, itrestart, init_v, itfin, itstart, ivtim, isignal, itsave, icheck);
 
-#ifdef NOMANAGED
-    !$acc data copyin(a01, a03, a05, a08, a10, a12, a14, a17, a19, b01, b03, b05, b08, b10, b12, b14, b17, b19, obs)
-#endif
+// #ifdef NOMANAGED
+//     #pragma acc data copyin(a01, a03, a05, a08, a10, a12, a14, a17, a19, b01, b03, b05, b08, b10, b12, b14, b17, b19, obs)
+// #endif
 
-        bgk::utils::system_clock(timing_s.countH1, timing_s.count_rate, timing_s.count_max);
+    
+    bgk::utils::system_clock(timing_s.countH1, timing_s.count_rate, timing_s.count_max);
     bgk::utils::time(timing_s.tcountH1);
     timing_s.time_init = static_cast<float>(timing_s.countH1 - timing_s.countH0) / timing_s.count_rate;
     timing_s.time_init1 = (timing_s.tcountH1 - timing_s.tcountH0);
@@ -43,12 +44,15 @@ int main() {
 
     if(bgk_storage.myrank == 0) { file_manager.write(0, bgk::utils::get_date()); }
 
-#ifdef OFFLOAD
-    !$OMP target data map(
-        tofrom
-        : a01, a03, a05, a08, a10, a12, a14, a17, a19, &!$OMP & b01, b03, b05, b08, b10, b12, b14, b17, obs)
-#endif
+// #ifdef OFFLOAD
+//     // #pragma omp target data map(
+//     //     tofrom
+//     //     : a01, a03, a05, a08, a10, a12, a14, a17, a19, &!$OMP & b01, b03, b05, b08, b10, b12, b14, b17, obs)
+// #endif
 
+        // Load data on device
+        bgk_storage.update_device();
+        
         for(int itime = itstart + 1; itime <= itfin; ++itime) {
 #ifdef DEBUG_2
         if(myrank == 0) { std::cout << "DEBUG2: starting time step = " << itime << std::endl; }

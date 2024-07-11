@@ -9,10 +9,10 @@ namespace bgk{
     static constexpr char format_1002[sizeof("{:14.6e} {:14.6e} {:14.6e} {:14.6e}\n")] = "{:14.6e} {:14.6e} {:14.6e} {:14.6e}\n";
 
     void prof_j(storage &bgk_storage, const int itime, const int icoord){
-        // Variables
-    std::vector<real_kinds::mykind> u(bgk_storage.m);
-    std::vector<real_kinds::mykind> v(bgk_storage.m);
-    std::vector<real_kinds::mykind> den(bgk_storage.m);
+    // Variables
+    std::vector<real_kinds::mykind> u(bgk_storage.m + 1);
+    std::vector<real_kinds::mykind> v(bgk_storage.m + 1);
+    std::vector<real_kinds::mykind> den(bgk_storage.m + 1);
     real_kinds::mykind cte1;
 
     // Set cte1 based on NOSHIFT
@@ -44,7 +44,7 @@ namespace bgk{
         a17 = bgk_storage.a17_host,
         a19 = bgk_storage.a19_host
     ](sycl::item<1> idx) {
-        const auto j = idx.get_linear_id();
+        const auto j = idx.get_linear_id() + 1;
         den[j] = (a01(icoord,j) + a03(icoord,j) + a05(icoord,j) + a08(icoord,j) + a10(icoord,j) + a12(icoord,j)
                      + a14(icoord,j) + a17(icoord,j) + a19(icoord,j))
             + cte1;
@@ -69,7 +69,7 @@ namespace bgk{
         a12 = bgk_storage.a12_host,
         a14 = bgk_storage.a14_host
     ](sycl::item<1> idx) {
-        const auto j = idx.get_linear_id();
+        const auto j = idx.get_linear_id() + 1;
         u[j] = (a01(icoord,j) - a10(icoord,j) + a03(icoord,j) - a12(icoord,j) + a05(icoord,j) - a14(icoord,j)) / den[j];
     }).wait_and_throw();
     
@@ -91,7 +91,7 @@ namespace bgk{
         a12 = bgk_storage.a12_host,
         a17 = bgk_storage.a17_host
     ](sycl::item<1> idx) {
-        const auto j = idx.get_linear_id();
+        const auto j = idx.get_linear_id() + 1;
         v[j] = (a03(icoord,j) - a01(icoord,j) + a08(icoord,j) - a17(icoord,j) + a12(icoord,j) - a10(icoord,j)) / den[j];
     }).wait_and_throw();
 
@@ -99,7 +99,7 @@ namespace bgk{
     auto& file_manager = debug::file_manager::instance();
     file_manager.write_format<format_1005>(64, itime);
     // Write data
-    for (int j = 0; j < bgk_storage.m; ++j) {
+    for (int j = 1; j <= bgk_storage.m; ++j) {
         file_manager.write_format<format_1002>(64, (j - 0.5), u[j], v[j], den[j]);
     }
 

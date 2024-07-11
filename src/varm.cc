@@ -6,9 +6,10 @@ static constexpr char format_1003[sizeof("{:5d} {:14.6e} {:14.6e} {:14.6e}\n")] 
 static constexpr char format_1005[sizeof("# t={:7d}\n")] = "# t={:7d}\n";
 
 void varm(storage &bgk_storage, const int itime) {
-    auto u = std::make_unique<real_kinds::mykind[]>(bgk_storage.m); // Mean velocity profiles
-    auto w = std::make_unique<real_kinds::mykind[]>(bgk_storage.m);
-    auto den = std::make_unique<real_kinds::mykind[]>(bgk_storage.m); // mean density profile
+    //To simplify indexing, those vectors will have one more element than the actual size
+    auto u = std::make_unique<real_kinds::mykind[]>(bgk_storage.m + 1); // Mean velocity profiles
+    auto w = std::make_unique<real_kinds::mykind[]>(bgk_storage.m + 1);
+    auto den = std::make_unique<real_kinds::mykind[]>(bgk_storage.m + 1); // mean density profile
     real_kinds::mykind rho, rhoinv, rvol;
     real_kinds::mykind cte1;
 
@@ -18,14 +19,14 @@ void varm(storage &bgk_storage, const int itime) {
     cte1 = storage::uno;
 #endif
 
-    for(int j = 0; j < bgk_storage.m; ++j) {
+    for(int j = 1; j <= bgk_storage.m; ++j) {
         u[j] = storage::zero;
         w[j] = storage::zero;
         den[j] = storage::zero;
     }
 
-    for(int j = 0; j < bgk_storage.m; ++j) {
-        for(int i = 0; i < bgk_storage.l; ++i) {
+    for(int j = 1; j <= bgk_storage.m + 1; ++j) {
+        for(int i = 1; i <= bgk_storage.l + 1; ++i) {
             rho = (bgk_storage.a01_host(i, j) + bgk_storage.a03_host(i, j) + bgk_storage.a05_host(i, j) + bgk_storage.a08_host(i, j)
                       + bgk_storage.a10_host(i, j) + bgk_storage.a12_host(i, j) + bgk_storage.a14_host(i, j) + bgk_storage.a17_host(i, j)
                       + bgk_storage.a19_host(i, j))
@@ -48,7 +49,7 @@ void varm(storage &bgk_storage, const int itime) {
 
     auto& file_manager = debug::file_manager::instance();
     file_manager.write_format<format_1005>(62, itime);
-    for(int j = 0; j < bgk_storage.m; ++j) {
+    for(int j = 1; j <= bgk_storage.m; ++j) {
         file_manager.write_format<format_1003>(62,  j+bgk_storage.offset[1], 
         u[j]*rvol,
         w[j]*rvol,

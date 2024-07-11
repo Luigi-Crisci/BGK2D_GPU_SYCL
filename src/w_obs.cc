@@ -16,7 +16,7 @@ void w_obs(storage &bgk_storage) {
     // Write the obstacle data to the file
     for(int j = 1; j <= bgk_storage.m; ++j) {
         for(int i = 1; i <= bgk_storage.l; ++i) {
-            file << i << " " << j << " " << bgk_storage.obs_host(i - 1, j - 1) << std::endl;
+            file << i << " " << j << " " << bgk_storage.obs_host(i, j) << std::endl;
         }
     }
 

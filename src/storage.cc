@@ -6,7 +6,7 @@
 namespace bgk {
 
 storage::storage()
-    : q(std::make_shared<sycl::queue>(sycl::default_selector{})), _a01(q), _a03(q), _a05(q), _a08(q), _a10(q), _a12(q),
+    : q(std::make_shared<sycl::queue>(sycl::gpu_selector{})), _a01(q), _a03(q), _a05(q), _a08(q), _a10(q), _a12(q),
       _a14(q), _a17(q), _a19(q), _b01(q), _b03(q), _b05(q), _b08(q), _b10(q), _b12(q), _b14(q), _b17(q), _b19(q),
       _obs(q) {}
 
@@ -24,7 +24,10 @@ void storage::init() {
             usm_buffer.m_device_ptr, Kokkos::dextents<std::size_t, 2>{row_num, col_num});
     };
 
-    init_lambda(_obs, obs_host, obs_device, l, m, 0);
+    // Note: To simplify porting porcess, obs has an additional element. In this way, we can directly use the 
+    // fortran index system (starting from one). This is also useful as the population vectors aXX 
+    // starts from 0 but they are indexed from 1.
+    init_lambda(_obs, obs_host, obs_device, l + 1, m + 1, 0);
 
     init_lambda(
         _a01, a01_host, a01_device, (l + 2 + ipad), (m + 2 + jpad), std::numeric_limits<real_kinds::mystorage>::max());

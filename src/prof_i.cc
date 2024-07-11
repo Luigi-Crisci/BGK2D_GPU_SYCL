@@ -9,9 +9,9 @@ static inline constexpr char format_1002[sizeof("{:14.6e} {:14.6e} {:14.6e} {:14
 static inline constexpr char format_1005[sizeof("# t={:7d}\n")] = "# t={:7d}\n";
 
 void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
-    std::vector<real_kinds::mykind> u(bgk_storage.l);
-    std::vector<real_kinds::mykind> v(bgk_storage.l);
-    std::vector<real_kinds::mykind> den(bgk_storage.l);
+    std::vector<real_kinds::mykind> u(bgk_storage.l + 1);
+    std::vector<real_kinds::mykind> v(bgk_storage.l + 1);
+    std::vector<real_kinds::mykind> den(bgk_storage.l + 1);
     real_kinds::mykind cte1;
 
 // Set cte1 based on NOSHIFT
@@ -45,7 +45,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     a17 = bgk_storage.a17_host,
     a19 = bgk_storage.a19_host
     ](sycl::item<1> idx) {
-        const auto i = idx.get_linear_id();
+        const auto i = idx.get_linear_id() + 1;
         den[i] = (a01(i,jcoord) + a03(i,jcoord) + a05(i,jcoord) + a08(i,jcoord) + a10(i,jcoord) + a12(i,jcoord)
                      + a14(i,jcoord) + a17(i,jcoord) + a19(i,jcoord))
             + cte1;
@@ -69,7 +69,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     a12 = bgk_storage.a12_host,
     a14 = bgk_storage.a14_host
     ](sycl::item<1> idx) {
-        const auto i = idx.get_linear_id();
+        const auto i = idx.get_linear_id() + 1;
         u[i] = (a01(i,jcoord) + a03(i,jcoord) + a05(i,jcoord) - a10(i,jcoord) - a12(i,jcoord) - a14(i,jcoord))
             / den[i];
     }).wait_and_throw();
@@ -91,7 +91,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     a12 = bgk_storage.a12_host,
     a17 = bgk_storage.a17_host
     ](sycl::item<1> idx) {
-        const auto i = idx.get_linear_id();
+        const auto i = idx.get_linear_id() + 1;
         v[i] = (a03(i,jcoord) + a08(i,jcoord) + a12(i,jcoord) - a01(i,jcoord) - a10(i,jcoord) - a17(i,jcoord))
             / den[i];
     }).wait_and_throw();
@@ -100,7 +100,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     file_manager.write_format<format_1005>(61, itime);
 
     // Write data
-    for(int i = 0; i < bgk_storage.l; ++i) {
+    for(int i = 1; i <= bgk_storage.l; ++i) {
         file_manager.write_format<format_1002>(61, (i-0.5), u[i], v[i], den[i]);
     }
 
