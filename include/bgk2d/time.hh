@@ -27,6 +27,8 @@ void system_clock(long int &countH0, long int &count_rate, long int &count_max);
 struct timing {
   private:
     timing() = default;
+    timing(const timing&) = delete;
+    timing& operator=(const timing&) = delete;
 
   public:
     // Assuming real_kinds and check_mem functionalities are handled or not needed

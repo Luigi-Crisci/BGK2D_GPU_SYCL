@@ -4,19 +4,19 @@
 namespace bgk {
 
 void bcond_driven(storage &bgk_storage) {
-    // Lid-driven cavity boundary condition
-    real_kinds::mystorage force;
-    auto &timing = utils::timing::instance();
-    auto &q = *bgk_storage.q;
+  // Lid-driven cavity boundary condition
+  real_kinds::mystorage force;
+  auto &timing = utils::timing::instance();
+  auto &q = *bgk_storage.q;
 
-    utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
-    utils::time(timing.tcountA0);
+  utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
+  utils::time(timing.tcountA0);
 
-    force = bgk_storage.u00 / real_kinds::mykind{6.0};
+  force = bgk_storage.u00 / real_kinds::mykind{6.0};
 
 #ifdef TRICK1
-    // it is correct only if l=m
-    // clang-format off
+  // it is correct only if l=m
+  // clang-format off
     q.parallel_for(sycl::range(bgk_storage.m), [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
