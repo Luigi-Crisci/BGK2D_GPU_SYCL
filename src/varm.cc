@@ -25,8 +25,8 @@ void varm(storage &bgk_storage, const int itime) {
         den[j] = storage::zero;
     }
 
-    for(int j = 1; j <= bgk_storage.m + 1; ++j) {
-        for(int i = 1; i <= bgk_storage.l + 1; ++i) {
+    for(int j = 1; j <= bgk_storage.m; ++j) {
+        for(int i = 1; i <= bgk_storage.l; ++i) {
             rho = (bgk_storage.a01_host(i, j) + bgk_storage.a03_host(i, j) + bgk_storage.a05_host(i, j) + bgk_storage.a08_host(i, j)
                       + bgk_storage.a10_host(i, j) + bgk_storage.a12_host(i, j) + bgk_storage.a14_host(i, j) + bgk_storage.a17_host(i, j)
                       + bgk_storage.a19_host(i, j))
