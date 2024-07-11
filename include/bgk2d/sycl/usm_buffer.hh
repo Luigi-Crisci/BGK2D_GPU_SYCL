@@ -12,11 +12,12 @@ struct usm_buffer {
     usm_buffer(const std::shared_ptr<sycl::queue> &q) : m_q(q) {}
 
     void allocate(size_t size) {
+        m_size = size;
         if constexpr(kind == sycl::usm::alloc::shared) {
             m_host_ptr = m_device_ptr = sycl::malloc_shared<T>(size, *m_q);
         } else if constexpr (kind == sycl::usm::alloc::device) {
             m_device_ptr = sycl::malloc_device<T>(size, *m_q);
-            m_host_ptr = new value_type[size];
+            m_host_ptr = sycl::malloc_host<T>(size, *m_q);
         }
     }
 
@@ -25,7 +26,7 @@ struct usm_buffer {
             sycl::free(m_host_ptr, *m_q);
         } else if(kind == sycl::usm::alloc::device) {
             sycl::free(m_device_ptr, *m_q);
-            delete[] m_host_ptr;
+            sycl::free(m_host_ptr, *m_q);
         }
     }
 
