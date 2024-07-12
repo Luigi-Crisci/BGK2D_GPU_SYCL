@@ -25,7 +25,7 @@ void readParameters(std::string_view filename, storage &bgk_storage, int &itfin,
     // clang-format off
     std::ifstream file(filename.data());
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        std::cerr << "Error opening file: " << filename << "\n";
         std::exit(-1);
     }
 
@@ -89,11 +89,11 @@ void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsa
     //ORIGINAL: a check
     #ifdef OBSTACLE
     if (bgk_storage.radius > bgk_storage.m / 8) {
-        std::cout << "WARNING: radius size = " << bgk_storage.radius << ", " << m << std::endl;
+        std::cout << "WARNING: radius size = " << bgk_storage.radius << ", " << m << "\n";
     }
 
     if (bgk_storage.radius > (bgk_storage.m - 2)) {
-        std::cerr << "ERROR: radius too big = " << bgk_storage.radius << ", " << m << std::endl;
+        std::cerr << "ERROR: radius too big = " << bgk_storage.radius << ", " << m << "\n";
         std::exit(EXIT_FAILURE);
     }
 #endif
@@ -104,7 +104,7 @@ void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsa
 
 #ifdef DEBUG_1
     if (storage.myrank == 0) {
-        std::cout << "DEBUG1: Exiting from sub. input" << std::endl;
+        std::cout << "DEBUG1: Exiting from sub. input" << "\n";
     }
 #endif
 
@@ -112,7 +112,7 @@ void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsa
     if (storage.myrank == 0) {
         auto& timing = utils::timing::instance();
         timing.mem_stop = get_mem();
-        std::cout << "MEM_CHECK: after sub. input mem = " << timing.mem_stop << std::endl;
+        std::cout << "MEM_CHECK: after sub. input mem = " << timing.mem_stop << "\n";
     }
 #endif
 }

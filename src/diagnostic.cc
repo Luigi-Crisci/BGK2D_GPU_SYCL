@@ -83,7 +83,7 @@ void diagnostic(storage &bgk_storage, const int itime, const int ivtim, const in
             // write(6,*) "DEBUG2", jstart, jstop
             // write(6,*) "DEBUG2", fluxX, fluxY
         } else {
-            std::cout << "DEBUG2: Exiting from sub. diagnostic " << itime << std::endl;
+            std::cout << "DEBUG2: Exiting from sub. diagnostic " << itime << "\n";
         }
     }
 #endif

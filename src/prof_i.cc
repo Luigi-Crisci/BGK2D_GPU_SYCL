@@ -108,7 +108,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
 
 // Debug output
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. prof_i" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. prof_i" << "\n"; }
 #endif
 
 }

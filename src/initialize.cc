@@ -66,7 +66,7 @@ void initialize(storage &bgk_storage, const int itrestart, const int init_v, con
 
         if(bgk_storage.myrank == 0) {
             restore_raw(bgk_storage, itstart);
-            std::cout << "INFO: restoring at timestep " << itstart << std::endl;
+            std::cout << "INFO: restoring at timestep " << itstart << "\n";
         }
 
         utils::system_clock(timing.countF1, timing.count_rate, timing.count_max);
@@ -77,14 +77,14 @@ void initialize(storage &bgk_storage, const int itrestart, const int init_v, con
 #ifdef DEBUG_1
         if(bgk_storage.myrank == 0) {
             std::cout << "DEBUG1: I/O time (1) "
-                      << static_cast<double>(timing.countF1 - timing.countF0) / timing.count_rate << std::endl;
-            std::cout << "DEBUG1: I/O time (2) " << timing.tcountF1 - timing.tcountF0 << std::endl;
+                      << static_cast<double>(timing.countF1 - timing.countF0) / timing.count_rate << "\n";
+            std::cout << "DEBUG1: I/O time (2) " << timing.tcountF1 - timing.tcountF0 << "\n";
         }
 #endif
 
     } else if(itrestart >= 2) {
         itstart = 0;
-        std::cerr << "still not implemented" << std::endl;
+        std::cerr << "still not implemented" << "\n";
         std::exit(EXIT_FAILURE);
     } else {
         itstart = 0;
@@ -116,13 +116,13 @@ void initialize(storage &bgk_storage, const int itrestart, const int init_v, con
 #endif
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. initialize" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. initialize" << "\n"; }
 #endif
 
 #ifdef MEM_CHECK
     if(myrank == 0) {
         timing.mem_stop = get_mem();
-        std::cout << "MEM_CHECK: after initialize. mem = " << timing.mem_stop << std::endl;
+        std::cout << "MEM_CHECK: after initialize. mem = " << timing.mem_stop << "\n";
     }
 #endif
 }

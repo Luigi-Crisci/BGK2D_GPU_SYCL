@@ -58,14 +58,14 @@ void varm(storage &bgk_storage, const int itime) {
     file_manager.write(62, "\n\n"); //TODO: CHeck if this works
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cerr << "DEBUG1: Exiting from sub. varm" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cerr << "DEBUG1: Exiting from sub. varm" << "\n"; }
 #endif
 #ifdef MEM_CHECK
     if(bgk_storage.myrank == 0) {
         // Assuming get_mem() is a function that returns memory usage
         auto& timing = utils::timing::instance();
         timing.mem_stop = get_mem();
-        std::cerr << "MEM_CHECK: after sub. varm mem = " << timing.mem_stop << std::endl;
+        std::cerr << "MEM_CHECK: after sub. varm mem = " << timing.mem_stop << "\n";
     }
 #endif
 }

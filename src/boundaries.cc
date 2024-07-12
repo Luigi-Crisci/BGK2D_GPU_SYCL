@@ -1,5 +1,6 @@
 #include <boundaries.hh>
 #include <bcond_driven.hh>
+#include <fmt/core.h>
 
 namespace bgk {
 void boundaries(storage &bgk_storage) {
@@ -26,7 +27,7 @@ void boundaries(storage &bgk_storage) {
 #endif
 
 #ifdef DEBUG_2
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG2: Exiting from function boundaries" << std::endl; }
+    if(bgk_storage.myrank == 0) { fmt::print("DEBUG2: Exiting from function boundaries\n"); }
 #endif
 }
 } // namespace bgk

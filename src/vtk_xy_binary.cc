@@ -104,7 +104,7 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     }
     bin_file.close();
 
-    std::cout << "I/O: plane xy (vtk,binary) done" << std::endl;
+    std::cout << "I/O: plane xy (vtk,binary) done" << "\n";
     auto& file_manager = debug::file_manager::instance();
     file_manager.write(16, "I/O: plane xy (vtk,binary) done\n");
     

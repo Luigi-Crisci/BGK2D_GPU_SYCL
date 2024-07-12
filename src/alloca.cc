@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fmt/core.h>
 
 #include <alloca.hh>
 #include <get_mem.hh>
@@ -16,13 +17,13 @@ void alloc(storage &bgk_storage) {
 #endif
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. alloca" << std::endl; }
+    if(bgk_storage.myrank == 0) { fmt::print("DEBUG1: Exiting from sub. alloca\n"); }
 #endif
 
 #ifdef MEM_CHECK
     if(bgk_storage.myrank == 0) {
         mem_stop = get_mem();
-        std::cout << "MEM_CHECK: after sub. alloca mem = " << mem_stop << std::endl;
+        fmt::print("MEM_CHECK: after sub. alloca mem = {}\n", mem_stop);
     }
 #endif
 }

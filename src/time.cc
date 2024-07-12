@@ -39,6 +39,6 @@ std::string bgk::utils::get_date(){
 
     std::ostringstream ss;
     // Use std::put_time to format the output similar to the `date` command
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X") << "\n";
     return ss.str();
 }

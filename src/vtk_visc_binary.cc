@@ -39,7 +39,7 @@ void vtk_visc_bin(storage& bgk_storage, const int itime){
 
     std::ofstream file(file_name, std::ios::out | std::ios::trunc);
     if (!file) {
-        std::cerr << "Error opening file: " << file_name << std::endl;
+        std::cerr << "Error opening file: " << file_name << "\n";
         return;
     }
 
@@ -57,7 +57,7 @@ void vtk_visc_bin(storage& bgk_storage, const int itime){
 
     std::ofstream bin_file(file_name, std::ios::binary | std::ios::app);
     if (!bin_file) {
-        std::cerr << "Error opening file: " << file_name << std::endl;
+        std::cerr << "Error opening file: " << file_name << "\n";
         return;
     }
     //TODO: Offload??
@@ -136,13 +136,13 @@ void vtk_visc_bin(storage& bgk_storage, const int itime){
     }
     bin_file.close();
 
-    std::cout << "I/O: viscosity (vtk,binary) done" << std::endl;
+    std::cout << "I/O: viscosity (vtk,binary) done" << "\n";
     auto& file_manager = debug::file_manager::instance();
     file_manager.write(16, "I/O: viscosity (vtk,binary) done\n");
 
 #ifdef DEBUG_1
     if (bgk_storage.myrank == 0) {
-        std::cout << "DEBUG1: Exiting from sub. vtk_visc_bin" << std::endl;
+        std::cout << "DEBUG1: Exiting from sub. vtk_visc_bin" << "\n";
     }
 #endif
 }

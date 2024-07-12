@@ -72,12 +72,12 @@ void vtk_om(storage &bgk_storage, const int itime) {
 
     file.close();
 
-    std::cout << "I/O : vorticity (vtk) done" << std::endl;
+    std::cout << "I/O : vorticity (vtk) done" << "\n";
     auto& file_manager = bgk::debug::file_manager::instance();
     file_manager.write(16, "I/O : vorticity (vtk) done\n");
 
 #ifdef DEBUG_1
-    if(myrank == 0) { std::cout << "DEBUG1: Exiting from sub. vtk_om" << std::endl; }
+    if(myrank == 0) { std::cout << "DEBUG1: Exiting from sub. vtk_om" << "\n"; }
 #endif
 }
 } // namespace bgk

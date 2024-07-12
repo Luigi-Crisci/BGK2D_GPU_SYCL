@@ -109,7 +109,7 @@ namespace bgk{
     // Debug output
 #ifdef DEBUG_1
     if (bgk_storage.myrank == 0) {
-        std::cout << "DEBUG1: Exiting from sub. prof_j" << std::endl;
+        std::cout << "DEBUG1: Exiting from sub. prof_j" << "\n";
     }
 #endif
     }

@@ -35,7 +35,7 @@ void init(storage &bgk_storage, const int opt) {
 
     // check parameter opt
     if(opt < 0 || opt > 5) {
-        std::cerr << "Initial condition out of range[0,5] " << opt << std::endl;
+        std::cerr << "Initial condition out of range[0,5] " << opt << "\n";
         std::exit(EXIT_FAILURE);
     }
 
@@ -53,12 +53,12 @@ void init(storage &bgk_storage, const int opt) {
 
     for(int j = 0; j <= bgk_storage.m1; ++j) {
         y = (static_cast<real_kinds::mykind>(j) - 0.5) / static_cast<real_kinds::mykind>(mm); // 0<x<1 (taylor)
-        // std::cout << j << ", " << y << std::endl;
+        // std::cout << j << ", " << y << "\n";
     }
-    // std::cout << " " << std::endl;
+    // std::cout << " " << "\n";
     for(int i = 0; i <= bgk_storage.l1; ++i) {
         x = (static_cast<real_kinds::mykind>(i) - 0.5) / static_cast<real_kinds::mykind>(ll); // 0<x<1 (taylor)
-        // std::cout << i << ", " << x << std::endl;
+        // std::cout << i << ", " << x << "\n";
     }
 
     // rest flow
@@ -103,7 +103,7 @@ void init(storage &bgk_storage, const int opt) {
     }
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. init" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. init" << "\n"; }
 #endif
 }
 

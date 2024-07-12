@@ -1,17 +1,17 @@
 #include <boundaries.hh>
 #include <collision.hh>
+#include <diagno.hh>
+#include <diagnostic.hh>
 #include <file_manager.hh>
 #include <finalize.hh>
 #include <initialize.hh>
 #include <prof_i.hh>
 #include <prof_j.hh>
+#include <profile.hh>
 #include <setup.hh>
 #include <storage.hh>
 #include <time.hh>
 #include <varm.hh>
-#include <diagnostic.hh>
-#include <profile.hh>
-#include <diagno.hh>
 
 int main() {
     int itfin, itstart, ivtim;
@@ -62,7 +62,7 @@ int main() {
 
     for(itime = itstart + 1; itime <= itfin; ++itime) {
 #ifdef DEBUG_2
-        if(myrank == 0) { std::cout << "DEBUG2: starting time step = " << itime << std::endl; }
+        if(myrank == 0) { std::cout << "DEBUG2: starting time step = " << itime << "\n"; }
 #endif
 
         boundaries(bgk_storage); // boundary conditions
@@ -75,9 +75,7 @@ int main() {
 
         // get timing/profiling values
         if(itime % isignal == 0) {
-            if(bgk_storage.myrank == 0) {
-                profile(bgk_storage, itime, itfin, isignal);
-            }
+            if(bgk_storage.myrank == 0) { profile(bgk_storage, itime, itfin, isignal); }
         }
     }
 
@@ -99,7 +97,7 @@ int main() {
 
     if(bgk_storage.myrank == 0) {
         file_manager.write(0, bgk::utils::get_date());
-        std::cout << "That's all folks!!!!" << std::endl;
+        std::cout << "That's all folks!!!!" << "\n";
     }
 
     return 0;

@@ -182,7 +182,7 @@ void col_MC(storage &bgk_storage, const int itime) {
              if(itime % 1000 == 0) {
                  if((i == l / 2) && (j == m / 2)) {
                      // omega = 2.0 / (6.0 * svisc + 1.0)
-                     std::cout << itime << " " << (2 / omega1 - 1) / 6 << " " << (2 / omega - 1) / 6 << std::endl;
+                     std::cout << itime << " " << (2 / omega1 - 1) / 6 << " " << (2 / omega - 1) / 6 << "\n";
                      printf("%d %f %f\n", itime, (2 / omega1 - 1) / 6, (2 / omega - 1) / 6);
                  }
              }

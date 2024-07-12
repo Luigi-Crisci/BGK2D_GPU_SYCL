@@ -16,6 +16,7 @@
   - Annotate host and device pointers?
     - Flag set when modified
     - Introduce overhead at each access
+- Check if I'm copying too many times obb
 
 # File porting status
 - [x] input.F90

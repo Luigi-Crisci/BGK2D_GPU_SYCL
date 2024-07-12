@@ -89,7 +89,7 @@ q.parallel_for(sycl::range(bgk_storage.m),
 
     #ifdef DEBUG_2
         if(bgk_storage.myrank == 0) {
-           std::cout << "DEBUG2: Exiting from sub. bcond_driven";
+           fmt::print("DEBUG2: Exiting from sub. bcond_driven\n");
         }
 #endif
 

@@ -11,41 +11,41 @@ namespace bgk {
 
 void print_start_info(const storage &bgk_storage) {
     if(bgk_storage.myrank == 0) {
-        std::cout << "================================" << std::endl;
-        std::cout << "        Uniform LBE...          " << std::endl;
+        std::cout << "================================" << "\n";
+        std::cout << "        Uniform LBE...          " << "\n";
 
         // Implementation
 #ifdef FUSED
-        std::cout << " Implementation: FUSED   " << std::endl;
+        std::cout << " Implementation: FUSED   " << "\n";
 #else
-        std::cout << " Implementation: ORIGINAL" << std::endl;
+        std::cout << " Implementation: ORIGINAL" << "\n";
 #endif
 
         // Parallelization
 #ifdef DOCONCURRENT
-        std::cout << " GPU Parallelization: DO concurrent   " << std::endl;
+        std::cout << " GPU Parallelization: DO concurrent   " << "\n";
 #elif MULTICORE
-        std::cout << " CPU Parallelization: multicore" << std::endl;
+        std::cout << " CPU Parallelization: multicore" << "\n";
 #elif OFFLOAD
-        std::cout << " GPU Parallelization: OpenMP offload" << std::endl;
+        std::cout << " GPU Parallelization: OpenMP offload" << "\n";
 #elif OPENACC
-        std::cout << " GPU Parallelization: OpenACC" << std::endl;
+        std::cout << " GPU Parallelization: OpenACC" << "\n";
 #else
-        std::cout << " Serial" << std::endl;
+        std::cout << " Serial" << "\n";
 #endif
 
         // Test case
 #ifdef TGV
-        std::cout << " Test Case: Taylor-Green Vortices" << std::endl;
+        std::cout << " Test Case: Taylor-Green Vortices" << "\n";
 #elif POF
-        std::cout << " Test Case: Poiseuille Flow" << std::endl;
+        std::cout << " Test Case: Poiseuille Flow" << "\n";
 #elif VKS
-        std::cout << " Test Case: Von Karman Street" << std::endl;
+        std::cout << " Test Case: Von Karman Street" << "\n";
 #else
-        std::cout << " Test Case: Lid-Driven Cavity" << std::endl;
+        std::cout << " Test Case: Lid-Driven Cavity" << "\n";
 #endif
 
-        std::cout << "================================" << std::endl;
+        std::cout << "================================" << "\n";
     }
 }
 
@@ -70,14 +70,14 @@ storage setup(int& itfin, int& ivtim, int& isignal, int& itsave, int& icheck, in
     alloc(bgk_storage);
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. setup" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. setup" << "\n"; }
 #endif
 
 #ifdef MEM_CHECK
     if(bgk_storage.myrank == 0) {
         auto &timing = utils::timing::instance();
         timing.mem_stop = get_mem();
-        std::cout << "MEM_CHECK: after sub. setup mem = " << mem_stop << std::endl;
+        std::cout << "MEM_CHECK: after sub. setup mem = " << mem_stop << "\n";
     }
 #endif
 

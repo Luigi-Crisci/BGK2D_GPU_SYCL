@@ -110,12 +110,12 @@ void vtk_om_bin(storage &bgk_storage, const int itime) {
     }
     bin_stream_file.close();
 
-    std::cout << "I/O: vorticity xy (vtk) done" << std::endl;
+    std::cout << "I/O: vorticity xy (vtk) done" << "\n";
     auto& file_manager = debug::file_manager::instance();
     file_manager.write(16, "I/O: vorticity xy (vtk) done\n");
 
 #ifdef DEBUG_1
-    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. vtk_om_bin" << std::endl; }
+    if(bgk_storage.myrank == 0) { std::cout << "DEBUG1: Exiting from sub. vtk_om_bin" << "\n"; }
 #endif
 
 

@@ -13,12 +13,12 @@ namespace bgk{
     auto& file_manager = debug::file_manager::instance();
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << file_name << std::endl;
+        std::cerr << "Error opening file: " << file_name << "\n";
         return;
     }
 
     file_manager.write(16, "INFO: I am restoring from", file_name);
-    std::cout << "INFO: I am restoring from " << file_name << std::endl;
+    std::cout << "INFO: I am restoring from " << file_name << "\n";
 
     file.read(reinterpret_cast<char*>(&itime), sizeof(itime));
 
@@ -72,7 +72,7 @@ namespace bgk{
 
 #ifdef DEBUG_1
     if (bgk_storage.myrank == 0) {
-        std::cout << "DEBUG1: Exiting from sub. restore_raw" << std::endl;
+        std::cout << "DEBUG1: Exiting from sub. restore_raw" << "\n";
     }
 #endif
 #ifdef MEM_CHECK
@@ -80,7 +80,7 @@ namespace bgk{
         auto& timing = utils::timing::instance();
         // Assuming get_mem() is a function that returns memory usage
         timing.mem_stop = get_mem();
-        std::cout << "MEM_CHECK: after sub. restore_raw mem = " << mem_stop << std::endl;
+        std::cout << "MEM_CHECK: after sub. restore_raw mem = " << mem_stop << "\n";
     }
 #endif
     }

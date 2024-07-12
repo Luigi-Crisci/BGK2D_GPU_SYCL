@@ -75,12 +75,18 @@ struct file_manager {
         using namespace files;
         constexpr auto string = format_string.value;
         files[id_to_filename.at(id)] << fmt::vformat(string, fmt::make_format_args(args...)) << "\n";
+        #ifdef DEBUG
+            files[id_to_filename.at(id)].flush();
+        #endif
     }
 
     template<typename... Args>
     void write(uint8_t id, std::string_view data) {
         using namespace files;
         files[id_to_filename.at(id)] << data << "\n";
+        #ifdef DEBUG
+            files[id_to_filename.at(id)].flush();
+        #endif
     }
 
     template<typename... Args>
@@ -88,6 +94,9 @@ struct file_manager {
         using namespace files;
         auto &stream = files[id_to_filename.at(id)];
         (stream << ... << args);
+        #ifdef DEBUG
+            files[id_to_filename.at(id)].flush();
+        #endif
     }
 
 
