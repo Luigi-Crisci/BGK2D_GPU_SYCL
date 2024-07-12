@@ -84,6 +84,11 @@ else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_MALLOC_DEVICE")
 endif()
 
+set(ENABLE_PREFETCH "" CACHE BOOL "Enable sycl::malloc_shared prefetch")
+if (ENABLE_PREFETCH)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_ENABLE_PREFETCH")
+endif()
+
 
 set(header_files
 include/bgk2d/diagno.hh

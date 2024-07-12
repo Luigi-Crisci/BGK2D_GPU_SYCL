@@ -21,9 +21,8 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     cte1 = storage::uno;
 #endif
 
-    //TODO:THOSE WERE DOCONCURRENT. PORT THIS TO SYCL
     // Density calculation
-    sycl::queue q{sycl::cpu_selector{}};
+    auto& q = *bgk_storage.host_q;
 
     // for(int i = 0; i < bgk_storage.l; ++i) {
     //     den[i] = (bgk_storage.a01_host(i,jcoord) + bgk_storage.a03_host(i,jcoord) + bgk_storage.a05_host(i,jcoord) + bgk_storage.a08_host(i,jcoord) + bgk_storage.a10(i,jcoord) + bgk_storage.a12_host(i,jcoord)

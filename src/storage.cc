@@ -6,9 +6,12 @@
 namespace bgk {
 
 storage::storage()
-    : q(std::make_shared<sycl::queue>(sycl::gpu_selector{})), _a01(q), _a03(q), _a05(q), _a08(q), _a10(q), _a12(q),
-      _a14(q), _a17(q), _a19(q), _b01(q), _b03(q), _b05(q), _b08(q), _b10(q), _b12(q), _b14(q), _b17(q), _b19(q),
-      _obs(q) {}
+    : host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
+      dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{})), _a01(host_q, dev_q), _a03(host_q, dev_q),
+      _a05(host_q, dev_q), _a08(host_q, dev_q), _a10(host_q, dev_q), _a12(host_q, dev_q), _a14(host_q, dev_q),
+      _a17(host_q, dev_q), _a19(host_q, dev_q), _b01(host_q, dev_q), _b03(host_q, dev_q), _b05(host_q, dev_q),
+      _b08(host_q, dev_q), _b10(host_q, dev_q), _b12(host_q, dev_q), _b14(host_q, dev_q), _b17(host_q, dev_q),
+      _b19(host_q, dev_q), _obs(host_q, dev_q) {}
 
 
 void storage::init() {
@@ -24,8 +27,8 @@ void storage::init() {
             usm_buffer.m_device_ptr, Kokkos::dextents<std::size_t, 2>{row_num, col_num});
     };
 
-    // Note: To simplify porting porcess, obs has an additional element. In this way, we can directly use the 
-    // fortran index system (starting from one). This is also useful as the population vectors aXX 
+    // Note: To simplify porting porcess, obs has an additional element. In this way, we can directly use the
+    // fortran index system (starting from one). This is also useful as the population vectors aXX
     // starts from 0 but they are indexed from 1.
     init_lambda(_obs, obs_host, obs_device, l + 1, m + 1, 0);
 
@@ -80,8 +83,7 @@ void storage::init() {
 #endif
 }
 
-void storage::update_host()
-{
+void storage::update_host() {
     _a01.unsafe_update_host();
     _a03.unsafe_update_host();
     _a05.unsafe_update_host();
@@ -105,8 +107,7 @@ void storage::update_host()
     _obs.unsafe_update_host();
 }
 
-void storage::update_device()
-{
+void storage::update_device() {
     _a01.unsafe_update_device();
     _a03.unsafe_update_device();
     _a05.unsafe_update_device();
@@ -127,12 +128,11 @@ void storage::update_device()
     _b17.unsafe_update_device();
     _b19.unsafe_update_device();
 
-    //TODO: Not sure we need to move this every time, probably useless
+    // TODO: Not sure we need to move this every time, probably useless
     _obs.unsafe_update_device();
 }
 
-void storage::swap_populations()
-{
+void storage::swap_populations() {
     swap_population_and_view(_a01, a01_host, a01_device, _b01, b01_host, b01_device);
     swap_population_and_view(_a03, a03_host, a03_device, _b03, b03_host, b03_device);
     swap_population_and_view(_a05, a05_host, a05_device, _b05, b05_host, b05_device);
@@ -146,8 +146,8 @@ void storage::swap_populations()
 }
 
 
-void storage::swap_population_and_view(auto& src_buffer, auto& src_view_host, auto& src_view_device, auto& dest_buffer, auto& dest_view_host, auto& dest_view_device)
-{
+void storage::swap_population_and_view(auto &src_buffer, auto &src_view_host, auto &src_view_device, auto &dest_buffer,
+    auto &dest_view_host, auto &dest_view_device) {
     swap(src_buffer, dest_buffer);
     swap(src_view_host, dest_view_host);
     swap(src_view_device, dest_view_device);

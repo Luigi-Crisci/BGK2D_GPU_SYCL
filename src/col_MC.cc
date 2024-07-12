@@ -6,7 +6,7 @@
 
 namespace bgk {
 void col_MC(storage &bgk_storage, const int itime) {
-    auto &q = *bgk_storage.q;
+    auto &q = *bgk_storage.dev_q;
     auto &timing = utils::timing::instance();
     constexpr real_kinds::mykind pi = 3.14159265358979;
 

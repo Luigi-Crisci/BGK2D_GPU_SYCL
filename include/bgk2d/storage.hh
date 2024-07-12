@@ -62,17 +62,25 @@ struct storage {
 
     // Clang-format on
     // Offloading variables
-    std::shared_ptr<sycl::queue> q;
+    std::shared_ptr<sycl::queue> host_q;
+    std::shared_ptr<sycl::queue> dev_q;
 #ifdef FUSED
     // Pointers for fused storage
     // std::unique_ptr<std::vector<std::vector<mystorage>>> a01, a03, a05, a08, a10, a12, a14, a17, a19;
     // std::unique_ptr<std::vector<std::vector<mystorage>>> b01, b03, b05, b08, b10, b12, b14, b17, b19;
     // std::unique_ptr<std::vector<std::vector<mystorage>>> c01, c03, c05, c08, c10, c12, c14, c17, c19;
     #if defined(SYCL_MALLOC_SHARED)
-    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17,
+    #ifdef SYCL_ENABLE_PREFETCH
+    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared, true> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17,
         _a19;
-    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared> _b01, _b03, _b05, _b08, _b10, _b12, _b14, _b17,
+    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared, true> _b01, _b03, _b05, _b08, _b10, _b12, _b14, _b17,
         _b19;
+    #else
+    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared, false> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17,
+            _a19;
+    bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::shared, false> _b01, _b03, _b05, _b08, _b10, _b12, _b14, _b17,
+        _b19;
+    #endif
     #else // SYCL_MALLOC_DEVICE
     bgk::usm_buffer<real_kinds::mystorage, sycl::usm::alloc::device> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17,
         _a19;

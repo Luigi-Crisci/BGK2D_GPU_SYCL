@@ -22,7 +22,7 @@ namespace bgk{
     cte1 = storage::uno;
 #endif
 
-    sycl::queue q{sycl::cpu_selector{}};
+    auto& q = *bgk_storage.host_q;
     // for (int j = 0; j < bgk_storage.m; ++j) {
     //     den[j] = (bgk_storage.a01_host(icoord,j) + bgk_storage.a03_host(icoord,j) + bgk_storage.a05_host(icoord,j) +
     //               bgk_storage.a08_host(icoord,j) + bgk_storage.a10_host(icoord,j) + bgk_storage.a12_host(icoord,j) +

@@ -7,7 +7,7 @@ void bcond_driven(storage &bgk_storage) {
   // Lid-driven cavity boundary condition
   real_kinds::mystorage force;
   auto &timing = utils::timing::instance();
-  auto &q = *bgk_storage.q;
+  auto &q = *bgk_storage.dev_q;
 
   utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
   utils::time(timing.tcountA0);
