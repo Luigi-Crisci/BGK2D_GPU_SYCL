@@ -7,6 +7,16 @@
 # Issues to track
 - `write` adds a newline by default, check the porting
 
+# Ideas
+- Flag in `usm_buffer` to avoid duplicated copy host-device or device-host
+  - Pointers stored in mdspans views, can be modified
+  - Make views member of usm_buffer?
+    - Can still be modified, but i can take track of when the views are requested
+    - In the current code status, it is possible
+  - Annotate host and device pointers?
+    - Flag set when modified
+    - Introduce overhead at each access
+
 # File porting status
 - [x] input.F90
 - [ ] col_MC.F90

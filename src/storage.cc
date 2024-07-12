@@ -127,7 +127,30 @@ void storage::update_device()
     _b17.unsafe_update_device();
     _b19.unsafe_update_device();
 
+    //TODO: Not sure we need to move this every time, probably useless
     _obs.unsafe_update_device();
+}
+
+void storage::swap_populations()
+{
+    swap_population_and_view(_a01, a01_host, a01_device, _b01, b01_host, b01_device);
+    swap_population_and_view(_a03, a03_host, a03_device, _b03, b03_host, b03_device);
+    swap_population_and_view(_a05, a05_host, a05_device, _b05, b05_host, b05_device);
+    swap_population_and_view(_a08, a08_host, a08_device, _b08, b08_host, b08_device);
+    swap_population_and_view(_a10, a10_host, a10_device, _b10, b10_host, b10_device);
+    swap_population_and_view(_a12, a12_host, a12_device, _b12, b12_host, b12_device);
+    swap_population_and_view(_a14, a14_host, a14_device, _b14, b14_host, b14_device);
+    swap_population_and_view(_a17, a17_host, a17_device, _b17, b17_host, b17_device);
+    // TODO: Commented in the original code, need to ask why
+    // swap_population_and_view(_a19, a19_host, a19_device, _b19, b19_host, b19_device);
+}
+
+
+void storage::swap_population_and_view(auto& src_buffer, auto& src_view_host, auto& src_view_device, auto& dest_buffer, auto& dest_view_host, auto& dest_view_device)
+{
+    swap(src_buffer, dest_buffer);
+    swap(src_view_host, dest_view_host);
+    swap(src_view_device, dest_view_device);
 }
 
 } // namespace bgk
