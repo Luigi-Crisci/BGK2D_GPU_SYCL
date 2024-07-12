@@ -69,18 +69,6 @@ void storage::init() {
         _b17, b17_host, b17_device, (l + 2 + ipad), (m + 2 + jpad), std::numeric_limits<real_kinds::mystorage>::max());
     init_lambda(
         _b19, b19_host, b19_device, (l + 2 + ipad), (m + 2 + jpad), std::numeric_limits<real_kinds::mystorage>::max());
-
-#ifdef FUSED
-    // c01 = std::nullptr;
-    // c03 = std::nullptr;
-    // c05 = std::nullptr;
-    // c08 = std::nullptr;
-    // c10 = std::nullptr;
-    // c12 = std::nullptr;
-    // c14 = std::nullptr;
-    // c17 = std::nullptr;
-    // c19 = std::nullptr;
-#endif
 }
 
 void storage::update_host() {
@@ -104,7 +92,7 @@ void storage::update_host() {
     _b17.unsafe_update_host();
     _b19.unsafe_update_host();
 
-    _obs.unsafe_update_host();
+    // _obs.unsafe_update_host(); //This is not used on the host after the initial allocation on the device
 }
 
 void storage::update_device() {
@@ -128,7 +116,6 @@ void storage::update_device() {
     _b17.unsafe_update_device();
     _b19.unsafe_update_device();
 
-    // TODO: Not sure we need to move this every time, probably useless
     _obs.unsafe_update_device();
 }
 
