@@ -1,23 +1,23 @@
 #include <bcond_driven.hh>
-#include <time.hh>
 #include <fmt/core.h>
+#include <time.hh>
 
 namespace bgk {
 
 void bcond_driven(storage &bgk_storage) {
-  // Lid-driven cavity boundary condition
-  real_kinds::mystorage force;
-  auto &timing = utils::timing::instance();
-  auto &q = *bgk_storage.dev_q;
+    // Lid-driven cavity boundary condition
+    real_kinds::mystorage force;
+    auto &timing = utils::timing::instance();
+    auto &q = *bgk_storage.dev_q;
 
-  utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
-  utils::time(timing.tcountA0);
+    utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
+    utils::time(timing.tcountA0);
 
-  force = bgk_storage.u00 / real_kinds::mykind{6.0};
+    force = bgk_storage.u00 / real_kinds::mykind{6.0};
 
 #ifdef TRICK1
-  // it is correct only if l=m
-  // clang-format off
+    // it is correct only if l=m
+    // clang-format off
     q.parallel_for(sycl::range(bgk_storage.m), [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
@@ -78,8 +78,37 @@ q.parallel_for(sycl::range(bgk_storage.m),
     a03(0,j-1) = a10(1,j);
     a01(0,j+1) = a12(1,j);
     a05(0,j) = a14(1,j);
+})
+
+q.parallel_for(sycl::range(bgk_storage.l), 
+[
+    a01 = bgk_storage.a01_device,
+    a03 = bgk_storage.a03_device,
+    a08 = bgk_storage.a08_device,
+    a10 = bgk_storage.a10_device,
+    a12 = bgk_storage.a12_device,
+    a17 = bgk_storage.a17_device,
+    m1 = bgk_storage.m1,
+    m = bgk_storage.m,
+    force
+](sycl::item<1> id){
+    const auto i = id.get_linear_id() + 1;
+// left (y = 0)  
+    a08(i  ,0)  = a17(i,1);
+    a12(i+1,0)  = a01(i,1);
+    a03(i-1,0)  = a10(i,1);
+
+// right (y = m) lid-wall
+    a10(i+1,m1) = a03(i,m) - force;
+    a17(i  ,m1) = a08(i,m);
+    a01(i-1,m1) = a12(i,m) + force;
 }).wait_and_throw();
+
+
 //clang-format on
+
+
+
 
 #endif
 
