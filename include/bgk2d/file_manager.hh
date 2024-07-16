@@ -3,6 +3,7 @@
 
 #include <fmt/format.h> //For formatting strings
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <unordered_map>
 // To speed up the porting process
@@ -61,6 +62,7 @@ struct file_manager {
 #pragma unroll
         for(int i = 0; i < files.size(); i++) {
             files[i] = std::ofstream(files::filenames[i].data(), std::ios::out | std::ios::trunc);
+            files[i] << std::setprecision(7);
         }
     }
 

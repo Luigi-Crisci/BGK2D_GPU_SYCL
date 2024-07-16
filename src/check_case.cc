@@ -70,10 +70,10 @@ void check_case(const storage &bgk_storage) {
 #else
     file16 << "INFO: using the same precision for computation" << "\n";
 #endif
-    file16 << "INFO: mykind= "    << utils::type_name<real_kinds::mykind>() << " range= " << std::numeric_limits<real_kinds::mykind>::max() << "\n";
+    file16 << "INFO: mykind= "    << utils::type_name<real_kinds::mykind>() << " range= " << std::numeric_limits<real_kinds::mykind>::max_exponent10 << "\n";
     file16 << "INFO: mykind= "    << utils::type_name<real_kinds::mykind>() << " huge= " << std::numeric_limits<real_kinds::mykind>::max() << "\n";
     file16 << "INFO: mykind= "    << utils::type_name<real_kinds::mykind>() << " epsilon= " << std::numeric_limits<real_kinds::mykind>::epsilon() << "\n";
-    file16 << "INFO: mystorage= " << utils::type_name<real_kinds::mystorage>() << " range= " << std::numeric_limits<real_kinds::mystorage>::max() << "\n";
+    file16 << "INFO: mystorage= " << utils::type_name<real_kinds::mystorage>() << " range= " << std::numeric_limits<real_kinds::mystorage>::max_exponent10 << "\n";
     file16 << "INFO: mystorage= " << utils::type_name<real_kinds::mystorage>() << " huge= " << std::numeric_limits<real_kinds::mystorage>::max() << "\n";
     file16 << "INFO: mystorage= " << utils::type_name<real_kinds::mystorage>() << " epsilon= " << std::numeric_limits<real_kinds::mystorage>::epsilon() << "\n";
     file16 << "INFO: using RAW I/O" << "\n";

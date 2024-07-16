@@ -18,7 +18,7 @@ void build_bcond(storage &bgk_storage) {
       bgk_storage.u0  = 0.0;            // volume force
     #endif
 
-    file_manager.write(16, "INFO: reference velocities --->\n", bgk_storage.u0, bgk_storage.u00);
+    file_manager.write(16, "INFO: reference velocities ---> ", bgk_storage.u0, " ", bgk_storage.u00, "\n");
     #ifdef OPENACC
       file_manager.write(38, "#", myrank, ":my GPU  is ------>\n", mydev, ndev);
     #endif
