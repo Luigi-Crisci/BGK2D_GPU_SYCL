@@ -33,7 +33,7 @@ void hencol(storage &bgk_storage) {
 
 #ifdef DEBUG_1
     if(bgk_storage.myrank == 0) {
-        std::cout << "DEBUG1: omega, fgrad" << bgk_storageomega << ", " << bgk_storage.fgrad << "\n";
+        std::cout << "DEBUG1: omega, fgrad" << bgk_storage.omega << ", " << bgk_storage.fgrad << "\n";
         std::cout << "DEBUG1: Exiting from sub. hencol" << "\n";
     }
 #endif

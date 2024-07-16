@@ -1,5 +1,6 @@
 #include <bcond_driven.hh>
 #include <time.hh>
+#include <fmt/core.h>
 
 namespace bgk {
 

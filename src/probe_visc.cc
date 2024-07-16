@@ -94,7 +94,7 @@ void probe_visc(storage &bgk_storage, const int itime, const int i0, const int j
 
     auto &file_manager = debug::file_manager::instance();
     file_manager.write_format<" Timestep {:8} {:14.6e} {:14.6e}\n">(
-        itime, (2 / bgk_storage.omega1 - 1) / 6, (2 / omega - 1) / 6);
+        65, itime, (2 / bgk_storage.omega1 - 1) / 6, (2 / omega - 1) / 6);
 
 #ifdef DEBUG_2
     if(bgk_storage.myrank == 0) { fmt::print("DEBUG2: Exiting from sub. probe {}, {}\n", i0, j0); }

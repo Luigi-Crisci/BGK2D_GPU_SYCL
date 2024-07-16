@@ -62,7 +62,7 @@ int main() {
 
     for(itime = itstart + 1; itime <= itfin; ++itime) {
 #ifdef DEBUG_2
-        if(myrank == 0) { std::cout << "DEBUG2: starting time step = " << itime << "\n"; }
+        if(bgk_storage.myrank == 0) { std::cout << "DEBUG2: starting time step = " << itime << "\n"; }
 #endif
 
         boundaries(bgk_storage); // boundary conditions

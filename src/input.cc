@@ -103,7 +103,7 @@ void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsa
     bgk_storage.u0y = decltype(bgk_storage.u0y){0.0};
 
 #ifdef DEBUG_1
-    if (storage.myrank == 0) {
+    if (bgk_storage.myrank == 0) {
         std::cout << "DEBUG1: Exiting from sub. input" << "\n";
     }
 #endif

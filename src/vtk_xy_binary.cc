@@ -109,9 +109,9 @@ void vtk_xy_bin(storage &bgk_storage, const int itime) {
     file_manager.write(16, "I/O: plane xy (vtk,binary) done\n");
     
     #ifdef DEBUG_1
-        if(bgk_storage.myrank == 0) then
-           std::cout << "DEBUG1: Exiting from sub. vtk_xy_bin\n";
-        endif
+        if(bgk_storage.myrank == 0){
+        std::cout << "DEBUG1: Exiting from sub. vtk_xy_bin\n";
+        }
 #endif
 }
 

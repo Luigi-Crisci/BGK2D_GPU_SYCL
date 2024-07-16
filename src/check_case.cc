@@ -135,6 +135,10 @@ void check_case(const storage &bgk_storage) {
     fmt::print("WARNING: forced offload num_threads(TRICK2)!\n");
     file16 << "WARNING: forced offload num_threads(TRICK2)!" << "\n";
 #endif
+
+#ifdef DEBUG
+    file16.flush();
+#endif
 }
 
 }

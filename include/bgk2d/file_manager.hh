@@ -100,7 +100,7 @@ struct file_manager {
     }
 
 
-    void flush(uint8_t id) { files[id].flush(); }
+    void flush(uint8_t id) { files[files::id_to_filename.at(id)].flush(); }
 
     static auto &instance() {
         static file_manager fm{};

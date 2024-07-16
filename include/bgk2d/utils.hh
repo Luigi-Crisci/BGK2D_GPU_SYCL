@@ -23,7 +23,7 @@ static constexpr auto type_name() {
     prefix = "auto __cdecl type_name<";
     suffix = ">(void)";
 #endif
-    name.remove_prefix(prefix.size());
+    name.remove_prefix(sizeof("bgk::utils::") + prefix.size() -1 );
     name.remove_suffix(suffix.size());
     return name;
 }
