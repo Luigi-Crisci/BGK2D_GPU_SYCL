@@ -78,7 +78,7 @@ q.parallel_for(sycl::range(bgk_storage.m),
     a03(0,j-1) = a10(1,j);
     a01(0,j+1) = a12(1,j);
     a05(0,j) = a14(1,j);
-})
+});
 
 q.parallel_for(sycl::range(bgk_storage.l), 
 [
