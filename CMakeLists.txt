@@ -159,6 +159,11 @@ else()
   message(FATAL_ERROR "Unsupported BGK_USE_CASE: ${BGK_USE_CASE}")
 endif()
 
+set(BGK_ENABLE_DEBUG_PRINT "OFF" CACHE BOOL "Enable debug print")
+if (BGK_ENABLE_DEBUG_PRINT)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_1 -DDEBUG_2 -DDEBUG_3")
+endif()
+
 
 set(header_files
     include/bgk2d/diagno.hh
@@ -284,5 +289,10 @@ if(BGK_SYCL_MALLOC_SHARED)
   else()
     message("   BGK_SYCL_ENABLE_PREFETCH: OFF")
   endif()
+endif()
+if (BGK_ENABLE_DEBUG_PRINT)
+  message("   BGK_ENABLE_DEBUG_PRINT: ON")
+else()
+  message("   BGK_ENABLE_DEBUG_PRINT: OFF")
 endif()
 message("###########################################################")
