@@ -164,6 +164,11 @@ if (BGK_ENABLE_DEBUG_PRINT)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_1 -DDEBUG_2 -DDEBUG_3")
 endif()
 
+set(BGK_DEBUG_HOST_QUEUE "OFF" CACHE BOOL "Enable debug host queue")
+if (BGK_DEBUG_HOST_QUEUE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_HOST_QUEUE")
+endif()
+
 
 set(header_files
     include/bgk2d/diagno.hh
@@ -294,5 +299,10 @@ if (BGK_ENABLE_DEBUG_PRINT)
   message("   BGK_ENABLE_DEBUG_PRINT: ON")
 else()
   message("   BGK_ENABLE_DEBUG_PRINT: OFF")
+endif()
+if (BGK_DEBUG_HOST_QUEUE)
+  message("   BGK_DEBUG_HOST_QUEUE: ON")
+else()
+  message("   BGK_DEBUG_HOST_QUEUE: OFF")
 endif()
 message("###########################################################")

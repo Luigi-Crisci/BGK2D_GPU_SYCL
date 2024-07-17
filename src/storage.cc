@@ -6,8 +6,15 @@
 namespace bgk {
 
 storage::storage()
-    : host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
-      dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{})), _a01(host_q, dev_q), _a03(host_q, dev_q),
+    : 
+      #ifdef DEBUG_HOST_QUEUE
+    host_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
+    dev_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
+      #else
+      host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
+      dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{})),
+      #endif
+      _a01(host_q, dev_q), _a03(host_q, dev_q),
       _a05(host_q, dev_q), _a08(host_q, dev_q), _a10(host_q, dev_q), _a12(host_q, dev_q), _a14(host_q, dev_q),
       _a17(host_q, dev_q), _a19(host_q, dev_q), _b01(host_q, dev_q), _b03(host_q, dev_q), _b05(host_q, dev_q),
       _b08(host_q, dev_q), _b10(host_q, dev_q), _b12(host_q, dev_q), _b14(host_q, dev_q), _b17(host_q, dev_q),
@@ -93,6 +100,9 @@ void storage::update_host() {
     _b19.unsafe_update_host();
 
     // _obs.unsafe_update_host(); //This is not used on the host after the initial allocation on the device
+
+    dev_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
+    host_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
 }
 
 void storage::update_device() {
@@ -117,6 +127,8 @@ void storage::update_device() {
     _b19.unsafe_update_device();
 
     _obs.unsafe_update_device();
+
+    dev_q->wait_and_throw(); //TODO: change with more fine grained wait
 }
 
 void storage::swap_populations() {
