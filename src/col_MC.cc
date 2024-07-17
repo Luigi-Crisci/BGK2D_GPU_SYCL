@@ -12,7 +12,7 @@ void col_MC(storage &bgk_storage, const int itime) {
 
 #ifdef FUSED
 
-    // #ifdef DEBUG_3
+    #ifdef DEBUG_3
     real_kinds::mykind cte;
     std::ostringstream file_nameD;
     file_nameD << "debug." << std::setw(3) << std::setfill('0') << itime << "." << std::setw(3) << std::setfill('0')
@@ -20,7 +20,7 @@ void col_MC(storage &bgk_storage, const int itime) {
     std::ofstream debug_file(file_nameD.str()); // debug file
 
     // call probe(itime, (3*l/4), (m/2));
-    // #endif
+    #endif
 
     #ifdef NOSHIFT
     static constexpr real_kinds::mykind cte1 = storage::zero;

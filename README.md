@@ -5,7 +5,8 @@
   - [ ] Mdspans?
 
 # Issues to track
-- `write` adds a newline by default, check the porting
+- [x]`write` adds a newline by default, check the porting 
+- [ ] 'malloc_shared' do not work on my local machine. Could be a device issue, check it on data-center level gpu
 
 # Ideas
 - Flag in `usm_buffer` to avoid duplicated copy host-device or device-host
