@@ -57,7 +57,7 @@ void bcond_driven(storage &bgk_storage) {
 #else
 
 // clang-format off
-q.parallel_for(sycl::range(bgk_storage.m), 
+const auto event = q.parallel_for(sycl::range(bgk_storage.m), 
 [
     a01 = bgk_storage.a01_device,
     a03 = bgk_storage.a03_device,
@@ -80,35 +80,33 @@ q.parallel_for(sycl::range(bgk_storage.m),
     a05(0,j) = a14(1,j);
 });
 
-q.parallel_for(sycl::range(bgk_storage.l), 
-[
-    a01 = bgk_storage.a01_device,
-    a03 = bgk_storage.a03_device,
-    a08 = bgk_storage.a08_device,
-    a10 = bgk_storage.a10_device,
-    a12 = bgk_storage.a12_device,
-    a17 = bgk_storage.a17_device,
-    m1 = bgk_storage.m1,
-    m = bgk_storage.m,
-    force
-](sycl::item<1> id){
-    const auto i = id.get_linear_id() + 1;
-// left (y = 0)  
-    a08(i  ,0)  = a17(i,1);
-    a12(i+1,0)  = a01(i,1);
-    a03(i-1,0)  = a10(i,1);
+q.submit([&](sycl::handler& cgh){
+    cgh.depends_on(event);
+    cgh.parallel_for(sycl::range(bgk_storage.l), 
+    [
+        a01 = bgk_storage.a01_device,
+        a03 = bgk_storage.a03_device,
+        a08 = bgk_storage.a08_device,
+        a10 = bgk_storage.a10_device,
+        a12 = bgk_storage.a12_device,
+        a17 = bgk_storage.a17_device,
+        m1 = bgk_storage.m1,
+        m = bgk_storage.m,
+        force
+    ](sycl::item<1> id){
+        const auto i = id.get_linear_id() + 1;
+    // left (y = 0)  
+        a08(i  ,0)  = a17(i,1);
+        a12(i+1,0)  = a01(i,1);
+        a03(i-1,0)  = a10(i,1);
 
-// right (y = m) lid-wall
-    a10(i+1,m1) = a03(i,m) - force;
-    a17(i  ,m1) = a08(i,m);
-    a01(i-1,m1) = a12(i,m) + force;
+    // right (y = m) lid-wall
+        a10(i+1,m1) = a03(i,m) - force;
+        a17(i  ,m1) = a08(i,m);
+        a01(i-1,m1) = a12(i,m) + force;
+    });
 }).wait_and_throw();
-
-
 //clang-format on
-
-
-
 
 #endif
 
