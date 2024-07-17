@@ -1,0 +1,33 @@
+ #--------------------------------
+ # Run info 
+         1024         1024
+ #--------------------------------
+ # Time for section 
+ # init   time  0.845413E+00   0.847656E+00
+ # loop   time  0.146797E+02   0.146797E+02
+ # coll   time  0.988640E-01   0.976563E-01
+ # move   time  0.000000E+00   0.000000E+00
+ # bc     time  0.117325E+00   0.121094E+00
+ # I/O    time  0.000000E+00   0.000000E+00
+ # diagno time  0.144577E+02   0.144570E+02
+ # Obst   time  0.000000E+00   0.000000E+00
+ # Check        0.580215E-02
+ #--------------------------------
+ # Ratio per section (loop)
+ # Ratio I/O    0.000   0.000
+ # Ratio BC     0.008   0.008
+ # Ratio Coll   0.007   0.007
+ # Ratio Diag.  0.985   0.985
+ # Ratio Move   0.000   0.000
+ # Ratio Obs    0.000   0.000
+ #--------------------------------
+ # Derived (global) metrics 
+ # Mlups            0.714304
+ # coll   Flop  0.137881E+05 MFlops
+ # coll   BW    0.763650E+04 GB/s
+ # move   BW             Inf GB/s
+ #--------------------------------
+ # Memory (task 0) metrics 
+ # Memory (start,stop)      0.000000       0.000000 MB
+    72.00000    
+ #--------------------------------

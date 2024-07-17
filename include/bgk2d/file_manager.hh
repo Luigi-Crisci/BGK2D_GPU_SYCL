@@ -76,7 +76,7 @@ struct file_manager {
     void write_format(uint8_t id, Args ...args) {
         using namespace files;
         constexpr auto string = format_string.value;
-        files[id_to_filename.at(id)] << fmt::vformat(string, fmt::make_format_args(args...)) << "\n";
+        files[id_to_filename.at(id)] << fmt::vformat(string, fmt::make_format_args(args...));
         #ifdef DEBUG
             files[id_to_filename.at(id)].flush();
         #endif

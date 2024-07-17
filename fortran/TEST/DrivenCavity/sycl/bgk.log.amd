@@ -1,0 +1,118 @@
+INFO: The test case is driven cavity (default)
+INFO: using single precision (storage)
+INFO: using the same precision for computation
+INFO: mykind= float range= 38
+INFO: mykind= float huge= 3.402823e+38
+INFO: mykind= float epsilon= 1.192093e-07
+INFO: mystorage= float range= 38
+INFO: mystorage= float huge= 3.402823e+38
+INFO: mystorage= float epsilon= 1.192093e-07
+INFO: using RAW I/O
+INFO: serial version (CPU)
+INFO: using Fused version
+INFO: reference velocities ---> 0 0.1
+I/O: plane xy (vtk,binary) done
+WARNING: volume forcing below 10e-7
+
+*********** size of the lattice **************
+l (width x)  =	1024
+m (width y)  =	1024
+*********** fluid data **********************
+viscosity    =	0.01024
+u0           =	0
+u00          =	0.1
+omega        =	1.884233
+tau          =	0.53072
+Reynolds     =	5000
+forcing1     =	0
+forcing2     =	0.01666667
+u_inflow     =	-3.501238e+24
+LES: cteS    =	0.1
+*********** run data ************************
+itfin        =	10
+itstart      =	0
+ivtim        =	1
+isignal      =	1
+itsave       =	90
+icheck       =	1
+flag1        =	0
+flag2        =	0
+flag3        =	0
+ipad         =	0
+jpad         =	0
+radius       =	16
+LES: cteS    =	0.1
+************** Further check ****************
+zero         =	0	0
+uno          =	1	1
+tre          =	3	3
+rf           =	3	3
+qf           =	1.5	1.5
+p0           =	0.4444444	0.4444444
+p1           =	0.1111111	0.1111111
+p2           =	0.02777778	0.02777778
+*********************************************
+
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        1
+       mean rho   1.000000e+00
+       mean vel   3.255191e-05   0.000000e+00   1.085066e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        2
+       mean rho   1.000000e+00
+       mean vel   4.461496e-05   1.427182e-09   4.439315e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        3
+       mean rho   1.000000e+00
+       mean vel   3.751956e-05   1.330041e-09   3.239395e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        4
+       mean rho   1.000000e+00
+       mean vel   2.823657e-05   5.825013e-09   9.441882e-07
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        5
+       mean rho   9.999999e-01
+       mean vel   2.965275e-05   4.198359e-09   1.016645e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        6
+       mean rho   1.000000e+00
+       mean vel   3.861845e-05   7.837277e-09   2.164298e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        7
+       mean rho   1.000000e+00
+       mean vel   4.451855e-05   4.518157e-09   3.389546e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        8
+       mean rho   1.000000e+00
+       mean vel   4.272225e-05   7.644058e-09   2.823874e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep        9
+       mean rho   1.000000e+00
+       mean vel   3.883671e-05   1.860183e-10   1.727411e-06
+I/O: plane xy (vtk,binary) done
+I/O: vorticity xy (vtk) done
+I/O: viscosity (vtk,binary) done
+ Timestep       10
+       mean rho   9.999999e-01
+       mean vel   3.945091e-05   3.878220e-09   1.748750e-06
+ Timestep       10
+       mean rho   9.999999e-01
+       mean vel   3.945091e-05   3.878220e-09   1.748750e-06

@@ -1,0 +1,13 @@
+&parameters
+lx = 512
+ly = 512
+svisc=0.512
+u0=0.1
+itfin=100000
+ivtim=500000
+isignal=5000
+itsave=1000000
+icheck=100000
+irestart=0
+init_v=0
+ipad=0        /

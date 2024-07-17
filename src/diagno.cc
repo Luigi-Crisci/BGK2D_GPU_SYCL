@@ -18,6 +18,8 @@ void diagno(storage &bgk_storage, const int itime) {
     rdv = storage::uno / (static_cast<real_kinds::mykind>(bgk_storage.l) * static_cast<real_kinds::mykind>(bgk_storage.m));
 
     bgk_storage.update_host(); //TODO: this can be redundant. Check if it is necessary
+    
+    auto& file_manager = debug::file_manager::instance();
 
     //TODO Offload?
     for(int j = 1; j <= bgk_storage.m; ++j) {
@@ -37,7 +39,9 @@ void diagno(storage &bgk_storage, const int itime) {
 
             xj = ((x03 - x12) + (x01 - x10) + (x05 - x14)) * rhoinv;
             yj = ((x03 - x01) + (x12 - x10) + (x08 - x17)) * rhoinv;
-
+            
+            // file_manager.write_format<"i = {:3}, j = {:3} => yj = {:14.6e}\n">(16,i, j, yj);
+            
             rtot += rho;
             xtot += xj;
             ytot += yj;
@@ -50,7 +54,6 @@ void diagno(storage &bgk_storage, const int itime) {
     ytot = (ytot / static_cast<float>(bgk_storage.l)) / static_cast<float>(bgk_storage.m);
     stot = (stot / static_cast<float>(bgk_storage.l)) / static_cast<float>(bgk_storage.m);
 
-    auto& file_manager = debug::file_manager::instance();
     file_manager.write(16, fmt::format(" Timestep {:8}\n", itime));
     file_manager.write(16, fmt::format("       mean rho {:14.6e}\n", rtot));
     file_manager.write(16, fmt::format("       mean vel {:14.6e} {:14.6e} {:14.6e}\n", xtot, ytot, stot));

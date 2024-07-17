@@ -121,8 +121,8 @@ void col_MC(storage &bgk_storage, const int itime) {
              e14 = rp1 * (-vx + qx) + cte1 * (rp1 - storage::p1);
              e17 = rp1 * (-vy + qy) + cte1 * (rp1 - storage::p1);
              e19 = rp0 * (+q0) + cte1 * (rp0 - storage::p0);
-
-    #ifdef LES
+             
+             #ifdef LES
              // compute les
 
              // non-equilibrium distribution

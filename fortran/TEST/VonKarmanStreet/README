@@ -1,0 +1,36 @@
+
+Description
+
+In this directory you can perform some simulation of Von Karman Streets (VKS).
+The initial condition is rest flow inflow at x=0 used.
+Inflow/Outflow B.C. along x direction (streamwise) and periodic B.C. alonf y direction (normal to wall) are applied.
+Different scripts (*.x) will allow you to:
+        1) Compile the code in different configurations
+        2) Run the code, in a "ad hoc" created directory
+
+There are some script (runMe.*.sh) to perform multiple simulation and check the results using gnuplot
+
+Files
+
+.
+├── bgk.input
+├── plot.gnu
+├── README
+├── runMe.1.sh
+├── run.single.gpu.fused.dc.nv.x
+├── run.single.gpu.fused.offload.nv.x
+└── run.single.gpu.fused.openacc.nv.x
+
+  
+To run VKS test use the following scripts (each one create a different directory)
+
+* run.single.gpu.fused.dc.nv.x   --> single precision, gpu, fused, do concurrent using NVIDIA compiler
+* run.single.gpu.fused.offload.nv.x   --> single precision, gpu, fused, offload using NVIDIA compiler
+* run.single.gpu.fused.openacc.nv.x   --> single precision, gpu, fused, openacc using NVIDIA compiler
+
+
+bgk.input        --> input file used for the simulation
+plot.gnu         --> gnuplot file to check the results between different precisions (NVIDIA)
+
+runMe.1.sh --> Running 3 simulation using GPU,FUSED and nvidia compiler (dc, offload, openacc) 
+
