@@ -8,11 +8,16 @@ namespace bgk {
 storage::storage()
     : 
       #ifdef DEBUG_HOST_QUEUE
-    host_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
-    dev_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
+        host_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
+        dev_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
       #else
-      host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
+        #ifdef SYCL_IN_ORDER_QUEUE
+      host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{}, sycl::property::queue::in_order{})),
+      dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{}, sycl::property::queue::in_order{})),
+        #else
+host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
       dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{})),
+        #endif
       #endif
       _a01(host_q, dev_q), _a03(host_q, dev_q),
       _a05(host_q, dev_q), _a08(host_q, dev_q), _a10(host_q, dev_q), _a12(host_q, dev_q), _a14(host_q, dev_q),
@@ -79,6 +84,8 @@ void storage::init() {
 }
 
 void storage::update_host() {
+    dev_q->wait();
+
     _a01.unsafe_update_host();
     _a03.unsafe_update_host();
     _a05.unsafe_update_host();
@@ -102,10 +109,14 @@ void storage::update_host() {
     // _obs.unsafe_update_host(); //This is not used on the host after the initial allocation on the device
 
     dev_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
+    #ifdef BKG_SYCL_MALLOC_SHARED
     host_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
+    #endif
 }
 
 void storage::update_device() {
+    host_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
+
     _a01.unsafe_update_device();
     _a03.unsafe_update_device();
     _a05.unsafe_update_device();

@@ -33,7 +33,7 @@ set(CMAKE_CXX_FLAGS_RELEASE
     "-O3 -DNDEBUG -march=native -ffast-math"
     CACHE STRING "Flags used by the C++ compiler during release builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-    "-O2 -DNDEBUG -march=native -ffast-math -g -fno-omit-frame-pointer"
+    "-O3 -DNDEBUG -march=native -ffast-math -ggdb -fno-omit-frame-pointer"
     CACHE
       STRING
       "Flags used by the C++ compiler during release builds with debug info."
@@ -171,6 +171,12 @@ set(BGK_DEBUG_HOST_QUEUE "OFF" CACHE BOOL "Enable debug host queue")
 if (BGK_DEBUG_HOST_QUEUE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_HOST_QUEUE")
 endif()
+
+set(BGK_SYCL_IN_ORDER_QUEUE "OFF" CACHE BOOL "Enable in-order SYCL queue")
+if (BGK_SYCL_IN_ORDER_QUEUE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_IN_ORDER_QUEUE")
+endif()
+
 
 
 set(header_files
@@ -319,5 +325,10 @@ if (BGK_DEBUG_HOST_QUEUE)
   message("   BGK_DEBUG_HOST_QUEUE: ON")
 else()
   message("   BGK_DEBUG_HOST_QUEUE: OFF")
+endif()
+if (BGK_SYCL_IN_ORDER_QUEUE)
+  message("   BGK_SYCL_IN_ORDER_QUEUE: ON")
+else()
+  message("   BGK_SYCL_IN_ORDER_QUEUE: OFF")
 endif()
 message("###########################################################")

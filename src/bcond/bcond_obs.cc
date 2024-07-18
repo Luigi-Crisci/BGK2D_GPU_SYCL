@@ -12,7 +12,7 @@ namespace bgk {
 
         const auto range_j = bgk_storage.jmax - bgk_storage.jmin + 1;
         const auto range_i = bgk_storage.imax - bgk_storage.imin + 1;
-        q.parallel_for(sycl::range(range_j, range_i), [
+        [[maybe_unused]] auto event = q.parallel_for(sycl::range(range_j, range_i), [
             obs = bgk_storage.obs_device,
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
@@ -37,7 +37,11 @@ namespace bgk {
                 a14(i,j) = a05(i-1,j  );
                 a17(i,j) = a08(i  ,j-1);
              }
-        }).wait_and_throw();
+        });
+
+        #ifndef SYCL_IN_ORDER_QUEUE
+        event.wait_and_throw();
+        #endif
     
         // Stop timing
         utils::time(timing.tcountO1);

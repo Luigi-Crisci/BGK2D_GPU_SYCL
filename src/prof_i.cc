@@ -52,8 +52,9 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     // }
     // Streamwise velocity calculation
     event = q.submit([&](sycl::handler &cgh) {
-        cgh.depends_on(event);
-
+        #ifndef SYCL_IN_ORDER_QUEUE
+cgh.depends_on(event);
+#endif
         cgh.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.l)},
             [u = u.data(), jcoord, den = den.data(), a01 = bgk_storage.a01_host, a03 = bgk_storage.a03_host,
                 a05 = bgk_storage.a05_host, a10 = bgk_storage.a10_host, a12 = bgk_storage.a12_host,
@@ -72,7 +73,9 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     //         / den[i];
     // }
     event = q.submit([&](sycl::handler& cgh){
-        cgh.depends_on(event);
+        #ifndef SYCL_IN_ORDER_QUEUE
+cgh.depends_on(event);
+#endif
     cgh.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.l)},
          [v = v.data(), jcoord, den = den.data(), a01 = bgk_storage.a01_host, a03 = bgk_storage.a03_host,
              a08 = bgk_storage.a08_host, a10 = bgk_storage.a10_host, a12 = bgk_storage.a12_host,
@@ -83,7 +86,7 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
                  / den[i];
          });
     });
-
+    
     event.wait();
 
     auto &file_manager = debug::file_manager::instance();

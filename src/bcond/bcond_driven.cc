@@ -57,7 +57,7 @@ void bcond_driven(storage &bgk_storage) {
 #else
 
 // clang-format off
-const auto event = q.parallel_for(sycl::range(bgk_storage.m), 
+[[maybe_unused]] auto event = q.parallel_for(sycl::range(bgk_storage.m), 
 [
     a01 = bgk_storage.a01_device,
     a03 = bgk_storage.a03_device,
@@ -80,8 +80,10 @@ const auto event = q.parallel_for(sycl::range(bgk_storage.m),
     a05(0,j) = a14(1,j);
 });
 
-q.submit([&](sycl::handler& cgh){
-    cgh.depends_on(event);
+event = q.submit([&](sycl::handler& cgh){
+    #ifndef SYCL_IN_ORDER_QUEUE
+cgh.depends_on(event);
+#endif
     cgh.parallel_for(sycl::range(bgk_storage.l), 
     [
         a01 = bgk_storage.a01_device,
@@ -105,7 +107,12 @@ q.submit([&](sycl::handler& cgh){
         a17(i  ,m1) = a08(i,m);
         a01(i-1,m1) = a12(i,m) + force;
     });
-}).wait_and_throw();
+});
+
+#ifndef SYCL_IN_ORDER_QUEUE
+event.wait_and_throw();
+#endif
+
 //clang-format on
 
 #endif

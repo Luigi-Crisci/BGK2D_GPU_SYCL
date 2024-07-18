@@ -60,7 +60,9 @@ namespace bgk{
 //
 
 q.submit([&](sycl::handler& cgh){
-    cgh.depends_on(event);
+    #ifndef SYCL_IN_ORDER_QUEUE
+cgh.depends_on(event);
+#endif
     constexpr auto start = 0;
     const auto end = bgk_storage.l + 2; // l + 1 (inclusive)
 
