@@ -59,9 +59,10 @@ if(SYCL_IMPL STREQUAL "AdaptiveCpp")
   find_package(AdaptiveCpp REQUIRED)
 elseif(SYCL_IMPL STREQUAL "dpcpp")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl")
+  set(DPCPP_TARGETS "spir64_x86_64" CACHE STRING "Specify the DPC++ SYCL targets")
 
   if(DPCPP_WITH_CUDA_BACKEND)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl-targets=nvptx64-nvidia-cuda")
+    set(DPCPP_TARGETS "${DPCPP_TARGETS},nvptx64-nvidia-cuda")
 
     set(CUDA_ARCH
         ""
@@ -80,8 +81,8 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
         CACHE STRING "ROCm device architecture e.g. gfx908")
 
     if(NOT ROCM_ARCH STREQUAL "")
-      set(CMAKE_CXX_FLAGS
-          "${CMAKE_CXX_FLAGS} -fsycl-targets=amd_gpu_${ROCM_ARCH}")
+      set(DPCPP_TARGETS
+          "${DPCPP_TARGETS},amd_gpu_${ROCM_ARCH}")
     endif()
   endif()
 
@@ -91,9 +92,11 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
         CACHE STRING "Level Zero device architecture e.g. acm-g10")
 
     if(NOT LZ_ARCH STREQUAL "")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl-targets=${LZ_ARCH}")
+      set(DPCPP_TARGETS "${DPCPP_TARGETS},${LZ_ARCH}")
     endif()
   endif()
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl-targets=${DPCPP_TARGETS}")
 endif()
 
 set(BGK_SYCL_MALLOC_SHARED
