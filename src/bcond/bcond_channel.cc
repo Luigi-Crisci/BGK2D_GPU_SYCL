@@ -94,7 +94,7 @@ utils::system_clock(timing.countA1, timing.count_rate, timing.count_max);
 timing.time_bc = static_cast<float>(timing.countA1 - timing.countA0) / timing.count_rate;
 timing.time_bc1 = timing.time_bc1 + (timing.tcountA1 - timing.tcountA0);
 
-#endif //todo:REMOVE
+#endif
 
     #ifdef DEBUG_2
         if(bgk_storage.myrank == 0){

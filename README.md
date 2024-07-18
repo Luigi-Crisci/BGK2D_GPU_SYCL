@@ -18,6 +18,7 @@
     - Flag set when modified
     - Introduce overhead at each access
 - Check if I'm copying too many times obb
+- ndrange instead of range
 
 # File porting status
 - [x] input.F90

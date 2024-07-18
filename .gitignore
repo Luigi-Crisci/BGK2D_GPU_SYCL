@@ -6,7 +6,6 @@ build/
 # Fortran code
 *.o
 *.mod
-*.x
 
 # simulation output files
 *.dat
