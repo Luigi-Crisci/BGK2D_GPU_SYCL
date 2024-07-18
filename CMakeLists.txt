@@ -70,7 +70,7 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
 
     if(NOT CUDA_ARCH STREQUAL "")
       set(CMAKE_CXX_FLAGS
-          "${CMAKE_CXX_FLAGS} -Xsycl-target-backend --cuda-gpu-arch=${CUDA_ARCH}"
+          "${CMAKE_CXX_FLAGS} -Xsycl-target-backend=nvptx64-nvidia-cuda --cuda-gpu-arch=${CUDA_ARCH}"
       )
     endif()
   endif()
