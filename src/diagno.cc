@@ -17,7 +17,7 @@ void diagno(storage &bgk_storage, const int itime) {
 
     rdv = storage::uno / (static_cast<real_kinds::mykind>(bgk_storage.l) * static_cast<real_kinds::mykind>(bgk_storage.m));
 
-    bgk_storage.update_host(); //TODO: this can be redundant. Check if it is necessary
+    // bgk_storage.update_host(); //TODO: this can be redundant. Check if it is necessary
     
     auto& file_manager = debug::file_manager::instance();
 

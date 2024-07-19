@@ -30,7 +30,7 @@ namespace bgk{
     // }
 
     // Density calculation
-    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+    auto event = q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
         den = den.data(),
         icoord,
         cte1,
@@ -48,7 +48,7 @@ namespace bgk{
         den[j] = (a01(icoord,j) + a03(icoord,j) + a05(icoord,j) + a08(icoord,j) + a10(icoord,j) + a12(icoord,j)
                      + a14(icoord,j) + a17(icoord,j) + a19(icoord,j))
             + cte1;
-    }).wait_and_throw();
+    });
 
 
 
@@ -58,7 +58,7 @@ namespace bgk{
     //             bgk_storage.a03_host(icoord,j) - bgk_storage.a12_host(icoord,j) +
     //             bgk_storage.a05_host(icoord,j) - bgk_storage.a14_host(icoord,j)) / den[j];
     // }
-    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+    event = q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)},event, [
         u = u.data(),
         icoord,
         den = den.data(),
@@ -71,7 +71,7 @@ namespace bgk{
     ](sycl::item<1> idx) {
         const auto j = idx.get_linear_id() + 1;
         u[j] = (a01(icoord,j) - a10(icoord,j) + a03(icoord,j) - a12(icoord,j) + a05(icoord,j) - a14(icoord,j)) / den[j];
-    }).wait_and_throw();
+    });
     
 
     // Normal-to-wall velocity calculation
@@ -80,7 +80,7 @@ namespace bgk{
     //             bgk_storage.a08_host(icoord,j) - bgk_storage.a17_host(icoord,j) +
     //             bgk_storage.a12_host(icoord,j) - bgk_storage.a10_host(icoord,j)) / den[j];
     // }
-    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, [
+    q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.m)}, event, [
         v = v.data(),
         icoord,
         den = den.data(),

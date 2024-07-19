@@ -31,7 +31,7 @@ void col_MC(storage &bgk_storage, const int itime) {
 
 
     // Porting kernels as range parallel_for, gonna switch to nd_range in optimization phase
-    auto event = q.parallel_for(sycl::range(bgk_storage.m, bgk_storage.l),
+    auto event = q.parallel_for<class col_MC>(sycl::range(bgk_storage.m, bgk_storage.l),
          [a01 = bgk_storage.a01_device, a03 = bgk_storage.a03_device, a05 = bgk_storage.a05_device,
              a08 = bgk_storage.a08_device, a10 = bgk_storage.a10_device, a12 = bgk_storage.a12_device,
              a14 = bgk_storage.a14_device, a17 = bgk_storage.a17_device, a19 = bgk_storage.a19_device,

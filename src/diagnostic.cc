@@ -44,8 +44,11 @@ void diagnostic(storage &bgk_storage, const int itime, const int ivtim, const in
         // start timing...
         utils::system_clock(timing.countA0, timing.count_rate, timing.count_max);
         utils::time(timing.tcountA0);
-
-        bgk_storage.update_host();
+        
+        //Avoid double update
+        if (! (itime % ivtim == 0)){
+            bgk_storage.update_host();
+        }
 
         diagno(bgk_storage, itime);
         probe(bgk_storage, itime, bgk_storage.l / 2, bgk_storage.m / 2);

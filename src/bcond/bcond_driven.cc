@@ -57,7 +57,7 @@ void bcond_driven(storage &bgk_storage) {
 #else
 
 // clang-format off
-[[maybe_unused]] auto event = q.parallel_for(sycl::range(bgk_storage.m), 
+[[maybe_unused]] auto event = q.parallel_for<class bcond_driven_front_rear>(sycl::range(bgk_storage.m), 
 [
     a01 = bgk_storage.a01_device,
     a03 = bgk_storage.a03_device,
@@ -84,7 +84,7 @@ event = q.submit([&](sycl::handler& cgh){
     #ifndef SYCL_IN_ORDER_QUEUE
 cgh.depends_on(event);
 #endif
-    cgh.parallel_for(sycl::range(bgk_storage.l), 
+    cgh.parallel_for<class bcond_driven_left_right>(sycl::range(bgk_storage.l), 
     [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
