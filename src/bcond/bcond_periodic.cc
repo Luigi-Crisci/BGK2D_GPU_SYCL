@@ -9,7 +9,7 @@ namespace bgk{
         utils::time(timing.tcountA0);
 
         auto& q = *bgk_storage.dev_q;
-        const auto event =  q.submit([&](sycl::handler& cgh){    
+    [[maybe_unused]] auto event =  q.submit([&](sycl::handler& cgh){    
             constexpr auto start = 0;
             const auto end = bgk_storage.m + 2; // m + 1 (included)
             cgh.parallel_for(sycl::range(end), [
@@ -37,7 +37,9 @@ namespace bgk{
         });
 
         q.submit([&](sycl::handler& cgh){
-            cgh.depends_on(event);
+            #ifndef SYCL_IN_ORDER_QUEUE
+cgh.depends_on(event);
+#endif
             constexpr auto start = 0;
             const auto end = bgk_storage.l + 2; // l + 1 (included)
             cgh.parallel_for(sycl::range(end), [
@@ -63,7 +65,11 @@ namespace bgk{
            a08(i,0) = a08(i,m);
            a12(i,0) = a12(i,m);
             });
-        }).wait_and_throw();
+        });
+
+        #ifndef SYCL_IN_ORDER_QUEUE
+        event.wait_and_throw();
+        #endif
 
         // Stop timing
         utils::time(timing.tcountA1);

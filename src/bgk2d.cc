@@ -86,6 +86,7 @@ int main() {
     timing_s.time_loop1 = timing_s.tcountE1 - timing_s.tcountE0;
 
     // final diagnostic (for check)
+    bgk_storage.update_host();
     diagno(bgk_storage, itime - 1);
     varm(bgk_storage, itime - 1);
     prof_i(bgk_storage, itime - 1, bgk_storage.m / 2);
