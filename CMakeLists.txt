@@ -300,6 +300,7 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
 endif()
 
 message("################# Configuration parameters #################")
+message("   BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message("   BGK_USE_CASE: ${BGK_USE_CASE}")
 message("   BGK_PRECISION: ${BGK_PRECISION}")
 message("   BGK_KERNEL_TYPE: ${BGK_KERNEL_TYPE}")
