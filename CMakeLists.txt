@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.20.2)
 project(bgk2dSYCL)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -303,6 +303,7 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
 endif()
 
 message("################# Configuration parameters #################")
+message("   BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message("   BGK_USE_CASE: ${BGK_USE_CASE}")
 message("   BGK_PRECISION: ${BGK_PRECISION}")
 message("   BGK_KERNEL_TYPE: ${BGK_KERNEL_TYPE}")
