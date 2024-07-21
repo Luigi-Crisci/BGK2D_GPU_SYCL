@@ -177,7 +177,10 @@ if (BGK_SYCL_IN_ORDER_QUEUE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_IN_ORDER_QUEUE")
 endif()
 
-
+set(BGK_SYCL_ND_RANGE "OFF" CACHE BOOL "Enable nd_range kernel")
+if (BGK_SYCL_ND_RANGE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_ND_RANGE")
+endif()
 
 set(header_files
 include/bgk2d/prof_j.hh
@@ -330,5 +333,10 @@ if (BGK_SYCL_IN_ORDER_QUEUE)
   message("   BGK_SYCL_IN_ORDER_QUEUE: ON")
 else()
   message("   BGK_SYCL_IN_ORDER_QUEUE: OFF")
+endif()
+if (BGK_SYCL_ND_RANGE)
+  message("   BGK_SYCL_ND_RANGE: ON")
+else()
+  message("   BGK_SYCL_ND_RANGE: OFF")
 endif()
 message("###########################################################")
