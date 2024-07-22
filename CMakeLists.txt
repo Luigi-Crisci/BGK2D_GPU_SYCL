@@ -182,6 +182,11 @@ if (BGK_SYCL_ND_RANGE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_ND_RANGE")
 endif()
 
+set(BGK_SYCL_DISABLE_CPU_DEVICE "OFF" CACHE BOOL "Disable CPU device. CPU jobs will be run on the Host Device")
+if (BGK_SYCL_DISABLE_CPU_DEVICE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_DISABLE_CPU_DEVICE")
+endif()
+
 set(header_files
 include/bgk2d/prof_j.hh
 include/bgk2d/vtk_xy.hh
@@ -341,5 +346,10 @@ if (BGK_SYCL_ND_RANGE)
   message("   BGK_SYCL_ND_RANGE: ON")
 else()
   message("   BGK_SYCL_ND_RANGE: OFF")
+endif()
+if (BGK_SYCL_DISABLE_CPU_DEVICE)
+  message("   BGK_SYCL_DISABLE_CPU_DEVICE: ON")
+else()
+  message("   BGK_SYCL_DISABLE_CPU_DEVICE: OFF")
 endif()
 message("###########################################################")

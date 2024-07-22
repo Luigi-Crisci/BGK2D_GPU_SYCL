@@ -5,17 +5,24 @@
 
 namespace bgk {
 
+#ifndef SYCL_DISABLE_CPU_DEVICE
+static constexpr auto cpu_selector = sycl::cpu_selector_v;
+#else
+static constexpr auto cpu_selector = sycl::host_selector{};
+
+#endif
+
 storage::storage()
     : 
       #ifdef DEBUG_HOST_QUEUE
-        host_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
-        dev_q(std::make_shared<sycl::queue>(sycl::host_selector{})),
+        host_q(std::make_shared<sycl::queue>(sycl::host_selector_v)),
+        dev_q(std::make_shared<sycl::queue>(sycl::host_selector_v)),
       #else
         #ifdef SYCL_IN_ORDER_QUEUE
-      host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{}, sycl::property::queue::in_order{})),
+      host_q(std::make_shared<sycl::queue>(cpu_selector, sycl::property::queue::in_order{})),
       dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{}, sycl::property::queue::in_order{})),
         #else
-host_q(std::make_shared<sycl::queue>(sycl::cpu_selector{})),
+host_q(std::make_shared<sycl::queue>(cpu_selector)),
       dev_q(std::make_shared<sycl::queue>(sycl::gpu_selector{})),
         #endif
       #endif
