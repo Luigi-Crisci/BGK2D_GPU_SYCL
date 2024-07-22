@@ -84,7 +84,7 @@ void storage::init() {
 }
 
 void storage::update_host() {
-    dev_q->wait();
+    // dev_q->wait();
 
     _a01.unsafe_update_host();
     _a03.unsafe_update_host();
@@ -115,7 +115,7 @@ void storage::update_host() {
 }
 
 void storage::update_device() {
-    host_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
+    // host_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
 
     _a01.unsafe_update_device();
     _a03.unsafe_update_device();
