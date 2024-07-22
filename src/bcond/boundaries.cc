@@ -1,4 +1,5 @@
 #include "bcond/bcond_channel.hh"
+#include "bcond/bcond_inflow.hh"
 #include <bcond/boundaries.hh>
 #include <bcond/bcond_driven.hh>
 #include <bcond/bcond_obs.hh>
@@ -28,11 +29,11 @@ void boundaries(storage &bgk_storage) {
 #endif
 
 #ifdef OBSTACLE
-    bcond_obs();
+    bcond_obs(bgk_storage);
 #endif
 
 #ifdef DEBUG_2
-    if(bgk_storage.myrank == 0) { fmt::print("DEBUG2: Exiting from function boundaries\n"); }
+    if(bgk_storage.myrank == 0) { fmt::pripnt("DEBUG2: Exiting from function boundaries\n"); }
 #endif
 }
 } // namespace bgk
