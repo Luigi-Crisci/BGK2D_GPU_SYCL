@@ -12,6 +12,7 @@
 #include <diagnostic.hh>
 #include <time.hh>
 #include <probe.hh>
+#include <draglift.hh>
 
 namespace bgk {
 
@@ -57,7 +58,7 @@ void diagnostic(storage &bgk_storage, const int itime, const int ivtim, const in
         prof_j(bgk_storage, itime, bgk_storage.l / 2);
 
 #ifdef DRAG
-        draglift(itime, 333);
+        draglift(bgk_storage, itime); //TODO: THIS HAD AN ADDITIONAL 333 ARGUMENT, WHAT'S THE MEANING?
 #endif
 
 // #ifdef LES

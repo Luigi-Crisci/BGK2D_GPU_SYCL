@@ -2,6 +2,7 @@
 #include <fmt/core.h>
 #include <iostream>
 #include <random>
+#include <file_manager.hh>
 
 namespace bgk {
 void build_obs(storage &bgk_storage) {
@@ -19,6 +20,8 @@ void build_obs(storage &bgk_storage) {
     bgk_storage.nobs = 0;
     bgk_storage.myrank = 0;
     itime = 0;
+    
+    auto& file_manager = debug::file_manager::instance();
     // Creating obstacle
 #ifdef SQUARE
     // Creating square
@@ -70,7 +73,7 @@ void build_obs(storage &bgk_storage) {
     }
 #else
     fmt::print("INFO: creating obstacle (cylinder)\n");
-    fmt::print("INFO: creating obstacle (cylinder)\n");
+    file_manager.write(16, "INFO: creating obstacle (cylinder)\n");
     icoord = 2 * bgk_storage.l / 5;
     jcoord = bgk_storage.m / 2;
     fmt::print("INFO: Cyl radius    --> {}, {}\n", bgk_storage.radius, bgk_storage.radius / bgk_storage.m);

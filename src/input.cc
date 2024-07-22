@@ -89,11 +89,11 @@ void input(storage& bgk_storage, int& itfin, int& ivtim, int& isignal, int& itsa
     //ORIGINAL: a check
     #ifdef OBSTACLE
     if (bgk_storage.radius > bgk_storage.m / 8) {
-        std::cout << "WARNING: radius size = " << bgk_storage.radius << ", " << m << "\n";
+        std::cout << "WARNING: radius size = " << bgk_storage.radius << ", " << bgk_storage.m << "\n";
     }
 
     if (bgk_storage.radius > (bgk_storage.m - 2)) {
-        std::cerr << "ERROR: radius too big = " << bgk_storage.radius << ", " << m << "\n";
+        std::cerr << "ERROR: radius too big = " << bgk_storage.radius << ", " << bgk_storage.m << "\n";
         std::exit(EXIT_FAILURE);
     }
 #endif
