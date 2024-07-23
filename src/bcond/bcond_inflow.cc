@@ -123,8 +123,9 @@ cgh.depends_on(event);
     // front, outflow  (x = l)
     [[maybe_unused]] const auto event = q.submit([&](sycl::handler& cgh){
         constexpr size_t start = 0;
-        const size_t end = bgk_storage.m + 2; // m + 1 (included)
-        cgh.parallel_for(sycl::nd_range({end}, {64}), [
+        const size_t end = bgk_storage.m + 2; // m + 1 (inclusive(
+	const size_t local_size = std::min(bgk_storage.m, 1024);
+        cgh.parallel_for(sycl::nd_range({static_cast<size_t>(bgk_storage.m)}, {local_size}), [
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
             a05 = bgk_storage.a05_device,
@@ -137,9 +138,10 @@ cgh.depends_on(event);
             u_inflow = bgk_storage.u_inflow,
             l = bgk_storage.l,
             l1 = bgk_storage.l1,
-            cte1
+            cte1,
+	    m = bgk_storage.m
         ](sycl::nd_item<1> id){
-            const auto j = id.get_global_id(0);
+            auto j = id.get_global_id(0);
             real_kinds::mykind xj,yj;
             real_kinds::mykind cvsq,crho, rhoinv;
             real_kinds::mykind cx01,cx03,cx05;
@@ -174,6 +176,42 @@ cgh.depends_on(event);
            a01(0,j) = crho*storage::p2*(cte1+cx01);
            a03(0,j) = crho*storage::p2*(cte1+cx03);
            a05(0,j) = crho*storage::p1*(cte1+cx05);
+
+	   //Remaining
+	   if ( j < 2 ) //There are two remaining
+	   {
+		j = j + m;
+	crho  = storage::uno;
+           rhoinv= storage::uno;
+        // front, outflow  (x = l)
+           xj = ((a03(l,j)-a12(l,j))+(a01(l,j)-a10(l,j))+(a05(l,j)-a14(l,j)))*rhoinv;
+           yj = ((a03(l,j)-a01(l,j))+(a12(l,j)-a10(l,j))+(a08(l,j)-a17(l,j)))*rhoinv;
+
+           cvsq=xj*xj+yj*yj;
+
+           cx10 = storage::rf*(-xj-yj)+storage::qf*(3.0*(xj+yj)*(xj+yj)-cvsq);
+           cx12 = storage::rf*(-xj+yj)+storage::qf*(3.0*(xj-yj)*(xj-yj)-cvsq);
+           cx14 = storage::rf*(-xj   )+storage::qf*(3.0*(xj   )*(xj   )-cvsq);
+
+           a10(l1,j) = crho*storage::p2*(cte1+cx10);
+           a12(l1,j) = crho*storage::p2*(cte1+cx12);
+           a14(l1,j) = crho*storage::p1*(cte1+cx14);
+
+         // rear, inflow (x = 0)
+           xj = u_inflow;
+           yj = storage::zero;
+
+           cvsq=xj*xj+yj*yj;
+
+           cx01 = storage::rf*( xj-yj   )+storage::qf*(3.0*(xj-yj)*(xj-yj)-cvsq);
+           cx03 = storage::rf*( xj+yj   )+storage::qf*(3.0*(xj+yj)*(xj+yj)-cvsq);
+           cx05 = storage::rf*( xj      )+storage::qf*(3.0*(xj   )*(xj   )-cvsq);
+
+           a01(0,j) = crho*storage::p2*(cte1+cx01);
+           a03(0,j) = crho*storage::p2*(cte1+cx03);
+           a05(0,j) = crho*storage::p1*(cte1+cx05);
+	   }
+
         });
     });
 
@@ -190,7 +228,8 @@ cgh.depends_on(event);
         
         constexpr size_t start = 0;
         const size_t end = bgk_storage.l + 2; // l + 1 (included)
-        cgh.parallel_for(sycl::nd_range({end}, {64}), [
+        const size_t local_size = std::min(bgk_storage.l, 1024);
+	cgh.parallel_for(sycl::nd_range({static_cast<size_t>(bgk_storage.l)}, {local_size}), [
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
             a05 = bgk_storage.a05_device,
@@ -203,9 +242,10 @@ cgh.depends_on(event);
             u_inflow = bgk_storage.u_inflow,
             m = bgk_storage.m,
             m1 = bgk_storage.m1,
-            cte1
+            cte1,
+	    l = bgk_storage.l
         ](sycl::nd_item<1> id){
-            const auto i = id.get_global_id(0);
+            auto i = id.get_global_id(0);
             // left, noslip  (y = 0)  
            a17(i,m1) = a17(i,1);
            a01(i,m1) = a01(i,1);
@@ -214,7 +254,20 @@ cgh.depends_on(event);
            a03(i,0) = a03(i,m);
            a08(i,0) = a08(i,m);
            a12(i,0) = a12(i,m);
-        });
+
+	   if (i < 2) // There are two remeaining
+	   {
+		i = i + l;
+		// left, noslip  (y = 0)  
+           	a17(i,m1) = a17(i,1);
+           	a01(i,m1) = a01(i,1);
+           	a10(i,m1) = a10(i,1);
+            	// right, noslip  (y = m) 
+           	a03(i,0) = a03(i,m);
+           	a08(i,0) = a08(i,m);
+           	a12(i,0) = a12(i,m);       
+	   }
+	   });
 });
 #endif
 

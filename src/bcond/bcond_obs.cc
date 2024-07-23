@@ -4,6 +4,17 @@
 
 namespace bgk {
 
+	static constexpr inline size_t flp2 (size_t x)
+	{
+		    x = x | (x >> 1);
+		    x = x | (x >> 2);
+		    x = x | (x >> 4);
+		    x = x | (x >> 8);
+		    x = x | (x >> 16);
+		    x = x | (x >> 32);
+		    return x - (x >> 1);
+	}
+
     void bcond_obs(storage& bgk_storage){
         auto& timing = utils::timing::instance();
         utils::system_clock(timing.countO0, timing.count_rate, timing.count_max);
@@ -43,7 +54,14 @@ namespace bgk {
         #else
         const size_t range_j = bgk_storage.jmax - bgk_storage.jmin + 1;
         const size_t range_i = bgk_storage.imax - bgk_storage.imin + 1;
-        [[maybe_unused]] auto event = q.parallel_for(sycl::nd_range<2>({range_j, range_i}, {8,8}), [
+        const size_t range_j_pow2 = flp2(range_j);
+	const size_t range_i_pow2 = flp2(range_i);
+	const size_t local_x_size = std::min(range_j_pow2, 1024ul);
+	const size_t local_y_size = std::min(range_i_pow2, 1024ul);
+	const size_t remaining_x = range_j - range_j_pow2;
+	const size_t remaining_y = range_i - range_i_pow2;
+
+	[[maybe_unused]] auto event = q.parallel_for(sycl::nd_range<2>({range_j_pow2, range_i_pow2}, {local_x_size,local_y_size}), [
             obs = bgk_storage.obs_device,
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
@@ -54,10 +72,12 @@ namespace bgk {
             a14 = bgk_storage.a14_device,
             a17 = bgk_storage.a17_device,
             jmin = bgk_storage.jmin,
-            imin = bgk_storage.imin
+            imin = bgk_storage.imin,
+	    remaining_x,
+	    remaining_y
         ](sycl::nd_item<2> id){
-            const auto j = id.get_global_id(0) + jmin;
-            const auto i = id.get_global_id(1) + imin;
+            auto j = id.get_global_id(0) + jmin;
+            auto i = id.get_global_id(1) + imin;
              if(obs(i,j)==1){
                 a01(i,j) = a12(i+1,j-1);
                 a03(i,j) = a10(i+1,j+1);
@@ -68,6 +88,21 @@ namespace bgk {
                 a14(i,j) = a05(i-1,j  );
                 a17(i,j) = a08(i  ,j-1);
              }
+	     //Remaining
+	     if (j < remaining_x && i < remaining_y){
+		j = j + remaining_x;
+		i = i + remaining_y;
+		if(obs(i,j)==1){
+                	a01(i,j) = a12(i+1,j-1);
+                	a03(i,j) = a10(i+1,j+1);
+                	a05(i,j) = a14(i+1,j  );
+                	a08(i,j) = a17(i  ,j+1);
+                	a10(i,j) = a03(i-1,j-1);
+                	a12(i,j) = a01(i-1,j+1);
+                	a14(i,j) = a05(i-1,j  );
+                	a17(i,j) = a08(i  ,j-1);
+             	}
+	     }
         });
         #endif // SYCL_ND_RANGE
 
