@@ -47,7 +47,8 @@ def benchmark(command_vec, command_cwd):
 
 def benchmark_fortran(local_hw):
     for h in local_hw:
-        with open(f"results_{h}.csv", "a") as file:
+        with open(f"results_{h}.csv", "w+") as file:
+            file.write("use_case,hardware,language,implementation,precision,threads,block_size,mlups\n") # Write header
             for uc in use_case:
                 exp_dir = f"{use_case_dir[uc]}/fortran"
                 for p in precision:
