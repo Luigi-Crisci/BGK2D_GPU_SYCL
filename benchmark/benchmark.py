@@ -34,7 +34,12 @@ def benchmark(command_vec, command_cwd):
             res = subprocess.run(command_vec, cwd=command_cwd, check=True, capture_output=True)
             mlups = float(res.stdout.decode().splitlines()[-2].split("Mlups")[1].strip())
             perf_res.append(mlups)
-        if np.std(perf_res) > 5:
+            
+        overall_mean = np.mean(perf_res)
+        overall_variance = np.var(perf_res, ddof=1)
+        threshold = overall_variance * 0.05
+        variances_within_threshold = [abs(x - overall_mean) < threshold for x in perf_res]
+        if all(variances_within_threshold):
             if repeat_count > 3:
                 print("Warning: Variance is too high, but already repeated 3 times, skipping...")
                 repeat = False
@@ -42,7 +47,7 @@ def benchmark(command_vec, command_cwd):
                 print("Warning: Variance is too high, repeating...")
         else:
             repeat = False
-        print(f"Values: {perf_res}, Std: {np.std(perf_res)}")
+        print(f"Values: {perf_res}, Mean: {overall_mean}, Variance: {overall_variance}, Threshold: {threshold}, Variance within threshold: {variances_within_threshold}")
     return np.median(perf_res)
 
 def benchmark_fortran(local_hw):
