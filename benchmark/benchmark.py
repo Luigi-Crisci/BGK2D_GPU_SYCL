@@ -23,7 +23,7 @@ implementation = dict(
 )
 
 DPCPP_ROOT = os.environ.get("DPCPP")
-sycl_compilers = ["dpcpp", "AdaptiveCpp"]
+sycl_compilers = ["dpcpp","AdaptiveCpp"]
 sycl_compilers_params = dict(
     {
         "AdaptiveCpp" : ["-DSYCL_IMPL=AdaptiveCpp", "-DCMAKE_CXX_COMPILER=acpp"],
@@ -73,7 +73,7 @@ def benchmark(command_vec, command_cwd):
         perf_res.clear()
         for i in range(NUM_REPS):
             print(f"Run {i+1}...")
-            res = subprocess.run(command_vec, cwd=command_cwd, capture_output=True)
+            res = subprocess.run(command_vec, cwd=command_cwd, capture_output=True, env=os.environ)
             mlups = float(res.stdout.decode().splitlines()[-2].split("Mlups")[1].strip())
             perf_res.append(mlups)
         overall_mean = np.mean(perf_res)
@@ -151,5 +151,8 @@ if __name__ == "__main__":
         subprocess.run(["cp", "./bgk.input", f"{dir}/sycl/bgk.input"])
         
     local_hw = ["NVIDIA"]
-    # benchmark_fortran(local_hw)
+    benchmark_fortran(local_hw)
+    #set environment variable
+    os.environ["OMP_PROC_BIND"] = "true"
+    os.environ["ACPP_ADAPTABILITY_LEVEL"] = "2"
     benchmark_sycl(local_hw)
