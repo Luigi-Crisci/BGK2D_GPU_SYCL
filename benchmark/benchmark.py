@@ -36,10 +36,10 @@ def benchmark(command_vec, command_cwd):
             perf_res.append(mlups)
             
         overall_mean = np.mean(perf_res)
-        overall_variance = np.var(perf_res, ddof=1)
+        overall_variance = np.var(perf_res)
         threshold = overall_variance * 0.05
         variances_within_threshold = [abs(x - overall_mean) < threshold for x in perf_res]
-        if all(variances_within_threshold):
+        if not all(variances_within_threshold):
             if repeat_count > 3:
                 print("Warning: Variance is too high, but already repeated 3 times, skipping...")
                 repeat = False
