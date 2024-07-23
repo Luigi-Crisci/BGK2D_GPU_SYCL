@@ -55,14 +55,27 @@ endif()
 
 message("Selected SYCL implementation: ${SYCL_IMPL}")
 
+set(BGK_SYCL_DISABLE_CPU_DEVICE "OFF" CACHE BOOL "Disable CPU device. CPU jobs will be run on the Host Device")
+if (BGK_SYCL_DISABLE_CPU_DEVICE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_DISABLE_CPU_DEVICE")
+endif()
+
 if(SYCL_IMPL STREQUAL "AdaptiveCpp")
   find_package(AdaptiveCpp REQUIRED)
 elseif(SYCL_IMPL STREQUAL "dpcpp")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl")
-  set(DPCPP_TARGETS "spir64_x86_64" CACHE STRING "Specify the DPC++ SYCL targets")
-
+ 
+  if (BGK_SYCL_DISABLE_CPU_DEVICE)
+	  set(DPCPP_TARGETS "")
+  else()
+	  set(DPCPP_TARGETS "spir64_x86_64")
+  endif()
   if(DPCPP_WITH_CUDA_BACKEND)
-    set(DPCPP_TARGETS "${DPCPP_TARGETS},nvptx64-nvidia-cuda")
+    if (DPCPP_TARGETS STREQUAL "")
+    	set(DPCPP_TARGETS "nvptx64-nvidia-cuda")
+    else()
+	set(DPCPP_TARGETS "${DPCPP_TARGETS},nvptx64-nvidia-cuda")
+    endif()
 
     set(CUDA_ARCH
         ""
@@ -81,8 +94,13 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
         CACHE STRING "ROCm device architecture e.g. gfx908")
 
     if(NOT ROCM_ARCH STREQUAL "")
-      set(DPCPP_TARGETS
+    if (DPCPP_TARGETS STREQUAL "")
+       set(DPCPP_TARGETS
+          "amd_gpu_${ROCM_ARCH}")
+    else()
+       set(DPCPP_TARGETS
           "${DPCPP_TARGETS},amd_gpu_${ROCM_ARCH}")
+    endif()    
     endif()
   endif()
 
@@ -92,10 +110,14 @@ elseif(SYCL_IMPL STREQUAL "dpcpp")
         CACHE STRING "Level Zero device architecture e.g. acm-g10")
 
     if(NOT LZ_ARCH STREQUAL "")
-      set(DPCPP_TARGETS "${DPCPP_TARGETS},${LZ_ARCH}")
-    endif()
+	    if (DCPPP_TARGETS STREQUAL "")
+                set(DPCPP_TARGETS "${LZ_ARCH}")
+	    else() 
+	     set(DPCPP_TARGETS "${DPCPP_TARGETS},${LZ_ARCH}")
+    		endif()
+endif()
   endif()
-
+  message(STATUS ${DPCPP_TARGETS})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl-targets=${DPCPP_TARGETS}")
 endif()
 
@@ -182,10 +204,7 @@ if (BGK_SYCL_ND_RANGE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_ND_RANGE")
 endif()
 
-set(BGK_SYCL_DISABLE_CPU_DEVICE "OFF" CACHE BOOL "Disable CPU device. CPU jobs will be run on the Host Device")
-if (BGK_SYCL_DISABLE_CPU_DEVICE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_DISABLE_CPU_DEVICE")
-endif()
+
 
 set(header_files
 include/bgk2d/prof_j.hh
