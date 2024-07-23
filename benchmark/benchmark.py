@@ -27,7 +27,7 @@ sycl_compilers = ["dpcpp","AdaptiveCpp"]
 sycl_compilers_params = dict(
     {
         "AdaptiveCpp" : ["-DSYCL_IMPL=AdaptiveCpp", "-DCMAKE_CXX_COMPILER=acpp"],
-        "dpcpp" : ["-DSYCL_IMPL=dpcpp", f"-DCMAKE_CXX_COMPILER={DPCPP_ROOT}/bin/clang++", "-DBGK_SYCL_DISABLE_CPU_DEVICE=ON"]
+        "dpcpp" : ["-DSYCL_IMPL=dpcpp", f"-DCMAKE_CXX_COMPILER={DPCPP_ROOT}/bin/clang++"]
     }
 )
 sycl_arch_flags = dict(
@@ -50,14 +50,14 @@ sycl_arch_flags = dict(
 sycl_kernel_types = ["range", "ndrange"]
 sycl_kernel_types_params = dict(
     {
-        "range" : "",
+        "range" : "-DBGK_SYCL_ND_RANGE=OFF",
         "ndrange" : "-DBGK_SYCL_ND_RANGE=ON"
     }
 )
 sycl_alloc_types = ["device", "shared"]
 sycl_alloc_types_params = dict(
     {
-        "device" : "",
+        "device" : "-DBGK_SYCL_MALLOC_SHARED=OFF",
         "shared" : "-DBGK_SYCL_MALLOC_SHARED=ON"       
     }
 )
@@ -106,7 +106,7 @@ def benchmark_sycl(local_hw):
                                 # Configure the app
                                 print("###############################################\n###############################################")
                                 command = ["cmake", "../build", 
-                                                "-DCMAKE_BUILD_TYPE=Release","-DBGK_SYCL_IN_ORDER_QUEUE=ON", 
+                                                "-DCMAKE_BUILD_TYPE=Release","-DBGK_SYCL_IN_ORDER_QUEUE=ON", "-DBGK_SYCL_DISABLE_CPU_DEVICE=OFF",
                                                 f"-DBGK_USE_CASE={uc}", f"-DBGK_PRECISION={p}",
                                                 sycl_kernel_types_params[kernel_type], sycl_alloc_types_params[alloc_type]]
                                 command.extend(sycl_compilers_params[compiler])
