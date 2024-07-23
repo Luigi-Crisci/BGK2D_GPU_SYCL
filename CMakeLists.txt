@@ -64,11 +64,10 @@ if(SYCL_IMPL STREQUAL "AdaptiveCpp")
   find_package(AdaptiveCpp REQUIRED)
 elseif(SYCL_IMPL STREQUAL "dpcpp")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl")
- 
+  
+  set(DPCPP_TARGETS "spir64_x86_64")
   if (BGK_SYCL_DISABLE_CPU_DEVICE)
 	  set(DPCPP_TARGETS "")
-  else()
-	  set(DPCPP_TARGETS "spir64_x86_64")
   endif()
   if(DPCPP_WITH_CUDA_BACKEND)
     if (DPCPP_TARGETS STREQUAL "")
