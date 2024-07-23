@@ -31,7 +31,7 @@ def benchmark(command_vec, command_cwd):
         perf_res.clear()
         for i in range(NUM_REPS):
             print(f"Run {i+1}...")
-            res = subprocess.run(command_vec, cwd=command_cwd, check=True, capture_output=True)
+            res = subprocess.run(command_vec, cwd=command_cwd, capture_output=True)
             mlups = float(res.stdout.decode().splitlines()[-2].split("Mlups")[1].strip())
             perf_res.append(mlups)
             
@@ -78,5 +78,5 @@ if __name__ == "__main__":
         subprocess.run(["cp", "./bgk.input", f"{dir}/fortran/bgk.input"])
         subprocess.run(["cp", "./bgk.input", f"{dir}/sycl/bgk.input"])
         
-    local_hw = ["GNU"]
+    local_hw = ["AMD"]
     benchmark_fortran(local_hw)
