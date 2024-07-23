@@ -235,9 +235,12 @@ void col_MC(storage &bgk_storage, const int itime) {
 #else
     // NDRange version
     const sycl::range<2> global_range(bgk_storage.m, bgk_storage.l);
-    const sycl::range<2> local_range(16, 16); //Using adaptivecpp generated sizes, TODO: tuned for nvidia
+    const sycl::range<2> local_range(1, 1024); //TODO: REMOVE, THE GRID COULD BE SMALLER IN OTHER USE CASES
     const sycl::nd_range<2> nd_range(global_range, local_range);
-    auto event = q.parallel_for<class col_MC>(nd_range,
+    
+    auto event = q.submit([&](sycl::handler& cgh){
+	// sycl::stream ss{static_cast<size_t>(1024), 1024, cgh};
+    cgh.parallel_for<class col_MC>(nd_range,
          [a01 = bgk_storage.a01_device, a03 = bgk_storage.a03_device, a05 = bgk_storage.a05_device,
              a08 = bgk_storage.a08_device, a10 = bgk_storage.a10_device, a12 = bgk_storage.a12_device,
              a14 = bgk_storage.a14_device, a17 = bgk_storage.a17_device, a19 = bgk_storage.a19_device,
@@ -247,6 +250,7 @@ void col_MC(storage &bgk_storage, const int itime) {
              obs = bgk_storage.obs_device, omega1 = bgk_storage.omega1,
              cteS = bgk_storage.cteS,
              omega = bgk_storage.omega,
+	    //  ss,
              fgrad = bgk_storage.fgrad](sycl::nd_item<2> id) {
              const auto j = id.get_global_id(0) + 1;
              const auto i = id.get_global_id(1) + 1;
@@ -262,7 +266,9 @@ void col_MC(storage &bgk_storage, const int itime) {
              real_kinds::mykind Pxx, Pxy, Pyx, Pyy, Ptotal;
              real_kinds::mykind Ts;
 
-
+	    //  if (i == 0 && j == 0){
+		// ss << id.get_local_range(0) << "," << id.get_local_range(1) << "\n";
+	    //  }
              x01 = a01(i - 1, j + 1);
              x03 = a03(i - 1, j - 1);
              x05 = a05(i - 1, j);
@@ -438,6 +444,7 @@ void col_MC(storage &bgk_storage, const int itime) {
              b17(i, j) = x17 - omega * (x17 - e17) + (-forcey);
              a19(i, j) = x19 - omega * (x19 - e19);
          });
+    });
 #endif // SYCL_ND_RANGE
 
     event.wait_and_throw();

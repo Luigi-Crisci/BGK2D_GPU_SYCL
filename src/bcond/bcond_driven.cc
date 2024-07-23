@@ -112,7 +112,7 @@ cgh.depends_on(event);
 
 #else
 
-[[maybe_unused]] auto event = q.parallel_for<class bcond_driven_front_rear>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.m)}, {128}), 
+[[maybe_unused]] auto event = q.parallel_for<class bcond_driven_front_rear>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.m)}, {1024}), 
 [
     a01 = bgk_storage.a01_device,
     a03 = bgk_storage.a03_device,
@@ -139,7 +139,7 @@ event = q.submit([&](sycl::handler& cgh){
     #ifndef SYCL_IN_ORDER_QUEUE
 cgh.depends_on(event);
 #endif
-    cgh.parallel_for<class bcond_driven_left_right>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.l)}, {128}), 
+    cgh.parallel_for<class bcond_driven_left_right>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.l)}, {1024}), 
     [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
