@@ -3,6 +3,7 @@ import subprocess
 import os
 import numpy as np
 
+NUM_REPS = 5
 fortran_exec_dir = f"{os.getcwd()}/../fortran/RUN"
 sycl_exec_dir = f"{os.getcwd()}/../build"
 
@@ -20,12 +21,53 @@ implementation = dict(
     INTEL = ["offload", "doconcurrent"],
     GNU = ["serial"]
 )
-NUM_REPS = 5
+
+DPCPP_ROOT = os.environ.get("DPCPP")
+sycl_compilers = ["dpcpp", "AdaptiveCpp"]
+sycl_compilers_params = dict(
+    {
+        "AdaptiveCpp" : ["-DSYCL_IMPL=AdaptiveCpp", "-DCMAKE_CXX_COMPILER=acpp"],
+        "dpcpp" : ["-DSYCL_IMPL=dpcpp", f"-DCMAKE_CXX_COMPILER={DPCPP_ROOT}/bin/clang++", "-DBGK_SYCL_DISABLE_CPU_DEVICE=ON"]
+    }
+)
+sycl_arch_flags = dict(
+    {
+        "dpcpp" : dict(
+            {
+                "NVIDIA" : ["-DDPCPP_WITH_CUDA_BACKEND=ON" ,"-DCUDA_ARCH=sm_70"],
+                "AMD" :    ["-DDPCPP_WITH_AMD_BACKEND=ON","-DROCM_ARCH=gfx908"],
+                "INTEL" :  ["-DDPCPP_WITH_LZ_BACKEND=ON", "-DLZ_ARCH=intel_gpu_pvc"]      
+            }),
+        "AdaptiveCpp" : dict(
+            {
+                "NVIDIA": [],
+                "AMD"   : [],
+                "INTEL" : []
+            })
+    }
+)
+
+sycl_kernel_types = ["range", "ndrange"]
+sycl_kernel_types_params = dict(
+    {
+        "range" : "",
+        "ndrange" : "-DBGK_SYCL_ND_RANGE=ON"
+    }
+)
+sycl_alloc_types = ["device", "shared"]
+sycl_alloc_types_params = dict(
+    {
+        "device" : "",
+        "shared" : "-DBGK_SYCL_MALLOC_SHARED=ON"       
+    }
+)
 
 def benchmark(command_vec, command_cwd):
     perf_res = []
     repeat = True
     repeat_count = 0
+    print(f"Warmup run...")
+    res = subprocess.run(command_vec, cwd=command_cwd, capture_output=True)
     while(repeat):
         repeat_count += 1
         perf_res.clear()
@@ -34,7 +76,6 @@ def benchmark(command_vec, command_cwd):
             res = subprocess.run(command_vec, cwd=command_cwd, capture_output=True)
             mlups = float(res.stdout.decode().splitlines()[-2].split("Mlups")[1].strip())
             perf_res.append(mlups)
-            
         overall_mean = np.mean(perf_res)
         overall_variance = np.var(perf_res)
         threshold = overall_variance * 0.1
@@ -49,6 +90,37 @@ def benchmark(command_vec, command_cwd):
             repeat = False
         print(f"Values: {perf_res}, Mean: {overall_mean}, Variance: {overall_variance}, Threshold: {threshold}, Variance within threshold: {variances_within_threshold}")
     return np.median(perf_res)
+
+
+def benchmark_sycl(local_hw):
+    executable_name = f"bgk2dSYCL"
+    for h in local_hw:
+        with open(f"results_{h}_SYCL.csv", "w+") as file:
+            file.write("usecase,hw,impl,parallelism,precision,queue,range,alloc_type,mlups\n") # Write header
+            for compiler in sycl_compilers:
+                for uc in use_case:
+                    exp_dir = f"{use_case_dir[uc]}/sycl"
+                    for p in precision:
+                        for kernel_type in sycl_kernel_types:
+                            for alloc_type in sycl_alloc_types:
+                                # Configure the app
+                                print("###############################################\n###############################################")
+                                command = ["cmake", "../build", 
+                                                "-DCMAKE_BUILD_TYPE=Release","-DBGK_SYCL_IN_ORDER_QUEUE=ON", 
+                                                f"-DBGK_USE_CASE={uc}", f"-DBGK_PRECISION={p}",
+                                                sycl_kernel_types_params[kernel_type], sycl_alloc_types_params[alloc_type]]
+                                command.extend(sycl_compilers_params[compiler])
+                                command.extend(sycl_arch_flags[compiler][h])
+                                print(command)
+                                subprocess.run(command)
+                                subprocess.run(command) # Run cmake twice to ensure that the flags are set correctly
+                                subprocess.run(["cmake", "--build", "../build", "--", "-j", f"{os.cpu_count()}"])
+                                print("###############################################\n###############################################")
+                                print(F"Running executable: {executable_name}")
+                                median = benchmark([f"{sycl_exec_dir}/{executable_name}"], exp_dir)
+                                file.write(f"{uc},{h},sycl,{compiler},{p},in_order,{kernel_type},{alloc_type},{median}\n")
+                                file.flush()
+                        
 
 def benchmark_fortran(local_hw):
     for h in local_hw:
@@ -78,5 +150,6 @@ if __name__ == "__main__":
         subprocess.run(["cp", "./bgk.input", f"{dir}/fortran/bgk.input"])
         subprocess.run(["cp", "./bgk.input", f"{dir}/sycl/bgk.input"])
         
-    local_hw = ["AMD"]
-    benchmark_fortran(local_hw)
+    local_hw = ["NVIDIA"]
+    # benchmark_fortran(local_hw)
+    benchmark_sycl(local_hw)
