@@ -235,7 +235,7 @@ void col_MC(storage &bgk_storage, const int itime) {
 #else
     // NDRange version
     const sycl::range<2> global_range(bgk_storage.m, bgk_storage.l);
-    const sycl::range<2> local_range(1, 1024); //TODO: REMOVE, THE GRID COULD BE SMALLER IN OTHER USE CASES
+    const sycl::range<2> local_range(1,1024); //TODO: REMOVE, THE GRID COULD BE SMALLER IN OTHER USE CASES
     const sycl::nd_range<2> nd_range(global_range, local_range);
     
     auto event = q.submit([&](sycl::handler& cgh){
