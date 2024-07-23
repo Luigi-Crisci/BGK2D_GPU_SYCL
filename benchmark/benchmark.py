@@ -35,7 +35,7 @@ sycl_arch_flags = dict(
         "dpcpp" : dict(
             {
                 "NVIDIA" : ["-DDPCPP_WITH_CUDA_BACKEND=ON" ,"-DCUDA_ARCH=sm_70"],
-                "AMD" :    ["-DDPCPP_WITH_AMD_BACKEND=ON","-DROCM_ARCH=gfx908"],
+                "AMD" :    ["-DDPCPP_WITH_ROCM_BACKEND=ON","-DROCM_ARCH=gfx908"],
                 "INTEL" :  ["-DDPCPP_WITH_LZ_BACKEND=ON", "-DLZ_ARCH=intel_gpu_pvc"]      
             }),
         "AdaptiveCpp" : dict(
@@ -105,15 +105,15 @@ def benchmark_sycl(local_hw):
                             for alloc_type in sycl_alloc_types:
                                 # Configure the app
                                 print("###############################################\n###############################################")
-                                command = ["cmake", "../build", 
+                                command = ["cmake", "-S", ".", "-B", "build", 
                                                 "-DCMAKE_BUILD_TYPE=Release","-DBGK_SYCL_IN_ORDER_QUEUE=ON", "-DBGK_SYCL_DISABLE_CPU_DEVICE=OFF",
                                                 f"-DBGK_USE_CASE={uc}", f"-DBGK_PRECISION={p}",
                                                 sycl_kernel_types_params[kernel_type], sycl_alloc_types_params[alloc_type]]
                                 command.extend(sycl_compilers_params[compiler])
                                 command.extend(sycl_arch_flags[compiler][h])
                                 print(command)
-                                subprocess.run(command)
-                                subprocess.run(command) # Run cmake twice to ensure that the flags are set correctly
+                                subprocess.run(command, cwd="../")
+                                subprocess.run(command, cwd="../") # Run cmake twice to ensure that the flags are set correctly
                                 subprocess.run(["cmake", "--build", "../build", "--", "-j", f"{os.cpu_count()}"])
                                 print("###############################################\n###############################################")
                                 print(F"Running executable: {executable_name}")
@@ -150,8 +150,8 @@ if __name__ == "__main__":
         subprocess.run(["cp", "./bgk.input", f"{dir}/fortran/bgk.input"])
         subprocess.run(["cp", "./bgk.input", f"{dir}/sycl/bgk.input"])
         
-    local_hw = ["NVIDIA"]
-    benchmark_fortran(local_hw)
+    local_hw = ["AMD"]
+    #benchmark_fortran(local_hw)
     #set environment variable
     os.environ["OMP_PROC_BIND"] = "true"
     os.environ["ACPP_ADAPTABILITY_LEVEL"] = "2"
