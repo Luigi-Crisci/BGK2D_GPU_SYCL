@@ -46,10 +46,10 @@ def benchmark(command_vec, command_cwd):
     return np.median(perf_res)
 
 def benchmark_fortran(local_hw):
-    with open("results.csv", "a") as file:
-        for uc in use_case:
-            exp_dir = f"{use_case_dir[uc]}/fortran"
-            for h in local_hw:
+    for h in local_hw:
+        with open(f"results_{h}.csv", "a") as file:
+            for uc in use_case:
+                exp_dir = f"{use_case_dir[uc]}/fortran"
                 for p in precision:
                     for i in implementation[h]:
                         executable_name = f"bgk2d.{i}.x"
