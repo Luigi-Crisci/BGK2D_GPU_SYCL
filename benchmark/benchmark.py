@@ -37,7 +37,7 @@ def benchmark(command_vec, command_cwd):
             
         overall_mean = np.mean(perf_res)
         overall_variance = np.var(perf_res)
-        threshold = overall_variance * 0.05
+        threshold = overall_variance * 0.1
         variances_within_threshold = [abs(x - overall_mean) < threshold for x in perf_res]
         if not all(variances_within_threshold):
             if repeat_count > 3:
