@@ -1,0 +1,13 @@
+use_case,hardware,language,implementation,precision,threads,block_size,mlups
+LDC,NVIDIA,fortran,offload,SINGLE,,,7356.915527
+LDC,NVIDIA,fortran,openacc,SINGLE,,,9361.305664
+LDC,NVIDIA,fortran,doconcurrent,SINGLE,,,9300.492188
+LDC,NVIDIA,fortran,offload,DOUBLE,,,4595.51416
+LDC,NVIDIA,fortran,openacc,DOUBLE,,,5064.819824
+LDC,NVIDIA,fortran,doconcurrent,DOUBLE,,,4956.112305
+VKS,NVIDIA,fortran,offload,SINGLE,,,7959.539551
+VKS,NVIDIA,fortran,openacc,SINGLE,,,9651.612305
+VKS,NVIDIA,fortran,doconcurrent,SINGLE,,,9328.772461
+VKS,NVIDIA,fortran,offload,DOUBLE,,,4580.810059
+VKS,NVIDIA,fortran,openacc,DOUBLE,,,5051.713867
+VKS,NVIDIA,fortran,doconcurrent,DOUBLE,,,4975.633789
