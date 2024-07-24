@@ -1,0 +1,9 @@
+use_case,hardware,language,implementation,precision,threads,block_size,mlups
+LDC,INTEL,fortran,offload,SINGLE,,,4798.84668
+LDC,INTEL,fortran,offload,MIXED1,,,4845.405762
+LDC,INTEL,fortran,offload,MIXED2,,,4846.499023
+LDC,INTEL,fortran,offload,DOUBLE,,,3286.126709
+VKS,INTEL,fortran,offload,SINGLE,,,4745.820312
+VKS,INTEL,fortran,offload,MIXED1,,,4748.969238
+VKS,INTEL,fortran,offload,MIXED2,,,4776.432129
+VKS,INTEL,fortran,offload,DOUBLE,,,3251.79248
