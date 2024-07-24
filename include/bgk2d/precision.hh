@@ -1,6 +1,8 @@
 #ifndef __PRECISION_H__
 #define __PRECISION_H__
 
+#include<stdint.h>
+
 namespace bgk::real_kinds {
 
 #ifdef HALF_P
