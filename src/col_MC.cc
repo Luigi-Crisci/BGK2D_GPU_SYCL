@@ -259,8 +259,16 @@ void col_MC(storage &bgk_storage, const int itime) {
              omega = bgk_storage.omega,
 	    //  ss,
              fgrad = bgk_storage.fgrad](sycl::nd_item<2> id) {
-             const auto j = id.get_global_id(0) + 1;
-             const auto i = id.get_global_id(1) + 1;
+	         #if defined(BGK_SYCL_LAYOUT_LEFT)
+	    	 const auto j = id.get_global_id(0) + 1;
+                 const auto i = id.get_global_id(1) + 1;  
+		 #elif defined(BGK_SYCL_LAYOUT_RIGHT)
+ 		const auto j = id.get_global_id(1) + 1;
+                 const auto i = id.get_global_id(0) + 1;	
+		#else
+	         const auto j = id.get_global_id(0) + 1;
+                 const auto i = id.get_global_id(1) + 1; 
+		 #endif
              real_kinds::mykind x01, x03, x05, x08, x10;
              real_kinds::mykind x12, x14, x17, x19;
              real_kinds::mykind e01, e03, e05, e08, e10;

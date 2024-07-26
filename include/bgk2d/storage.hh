@@ -118,9 +118,9 @@ struct storage {
     // std::vector<std::vector<real_kinds::mystorage>> b01, b03, b05, b08, b10, b12, b14, b17, b19;
     std::unique_ptr<real_kinds::mystorage[]> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17, _a19;
     std::unique_ptr<real_kinds::mystorage[]> _b01, _b03, _b05, _b08, _b10, _b12, _b14, _b17, _b19;
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> a01, a03, a05, a08,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> a01, a03, a05, a08,
         a10, a12, a14, a17, a19;
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> b01, b03, b05, b08,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> b01, b03, b05, b08,
         b10, b12, b14, b17, b19;
 #endif
 
@@ -131,7 +131,7 @@ struct storage {
 #else // SYCL_MALLOC_DEVICE
     bgk::usm_buffer<int, sycl::usm::alloc::device> _obs;
 #endif
-    Kokkos::mdspan<int, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> obs_host, obs_device;
+    Kokkos::mdspan<int, Kokkos::dextents<std::size_t, 2>, layout> obs_host, obs_device;
 
     int radius;
 
