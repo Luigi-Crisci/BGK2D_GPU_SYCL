@@ -12,6 +12,14 @@
 
 namespace bgk {
 
+    #if defined(BGK_SYCL_LAYOUT_RIGHT)
+        using layout = Kokkos::layout_right;
+    #elif defined(BGK_SYCL_LAYOUT_LEFT)
+        using layout = Kokkos::layout_left;
+    #else
+        using layout = Kokkos::layout_left;
+    #endif
+
 struct storage {
     // MPI and other constants
     static constexpr int mpid = 2;
@@ -88,13 +96,13 @@ struct storage {
         _b19;
     #endif
     // Preallocate host and device views
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> a01_host, a03_host,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> a01_host, a03_host,
         a05_host, a08_host, a10_host, a12_host, a14_host, a17_host, a19_host;
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> a01_device, a03_device,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> a01_device, a03_device,
         a05_device, a08_device, a10_device, a12_device, a14_device, a17_device, a19_device;
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> b01_host, b03_host,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> b01_host, b03_host,
         b05_host, b08_host, b10_host, b12_host, b14_host, b17_host, b19_host;
-    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, Kokkos::layout_left> b01_device, b03_device,
+    Kokkos::mdspan<real_kinds::mystorage, Kokkos::dextents<std::size_t, 2>, layout> b01_device, b03_device,
         b05_device, b08_device, b10_device, b12_device, b14_device, b17_device, b19_device;
 
         // std::unique_ptr<real_kinds::mystorage[]> _a01, _a03, _a05, _a08, _a10, _a12, _a14, _a17, _a19;
