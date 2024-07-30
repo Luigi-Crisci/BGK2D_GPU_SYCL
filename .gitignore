@@ -11,3 +11,6 @@ build/
 *.dat
 *.log
 *.vtk
+
+benchmark/profiles/*
+.bgk2d_venv/
