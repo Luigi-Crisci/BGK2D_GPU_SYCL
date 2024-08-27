@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
     "-O0 -g -DDEBUG -fno-omit-frame-pointer"
     CACHE STRING "Flags used by the C++ compiler during debug builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELEASE
-    "-O3 -DNDEBUG -march=native -ffast-math -Wno-nan-infinity-disabled"
+	"-O3 -DNDEBUG -march=native -ffast-math -Wno-nan-infinity-disabled"
     CACHE STRING "Flags used by the C++ compiler during release builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
     "-O3 -DNDEBUG -march=native -ffast-math -ggdb -fno-omit-frame-pointer"
@@ -194,7 +194,7 @@ if (BGK_DEBUG_HOST_QUEUE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_HOST_QUEUE")
 endif()
 
-set(BGK_SYCL_IN_ORDER_QUEUE "OFF" CACHE BOOL "Enable in-order SYCL queue")
+set(BGK_SYCL_IN_ORDER_QUEUE "ON" CACHE BOOL "Enable in-order SYCL queue")
 if (BGK_SYCL_IN_ORDER_QUEUE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSYCL_IN_ORDER_QUEUE")
 endif()
