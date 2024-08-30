@@ -75,7 +75,7 @@ void init(storage &bgk_storage, const int opt) {
 
             // kida(?) vortices
             xj = 0.1 * std::sin(real_kinds::mykind{2.0} * pi * x) * std::cos(real_kinds::mykind{2.0} * pi * y);
-            yj = -0.1 * std::cos(real_kinds::mykind{2.0} * pi * x) * std::in(real_kinds::mykind{2.0} * pi * y);
+            yj = -0.1 * std::cos(real_kinds::mykind{2.0} * pi * x) * std::sin(real_kinds::mykind{2.0} * pi * y);
 #endif
 
             cvsq = xj * xj + yj * yj;
