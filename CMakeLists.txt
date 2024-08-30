@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
     "-O0 -g -DDEBUG -fno-omit-frame-pointer"
     CACHE STRING "Flags used by the C++ compiler during debug builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELEASE
-	"-O3 -DNDEBUG -march=native -ffast-math -Wno-nan-infinity-disabled"
+	"-O3 -DNDEBUG -march=native -Wno-nan-infinity-disabled"
     CACHE STRING "Flags used by the C++ compiler during release builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
     "-O3 -DNDEBUG -march=native -ffast-math -ggdb -fno-omit-frame-pointer"
