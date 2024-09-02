@@ -23,13 +23,54 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
 #endif
 
     // Density calculation
+    bgk_storage.dev_q->wait();
+    bgk_storage.update_host();
+/*
+    std::cout << std::fixed << std::setprecision(20);
+    std::cout << "Checking iteration " << itime << "\n";
+for (int i = 0; i <= bgk_storage.l; i++){
+            for (int j = 0; j <= bgk_storage.m; j++){
+                std::cout << " a01[            " << i << " ][            " << j << " ] =     " << bgk_storage.a01_host(i, j) << "     \n";
+                std::cout << " a03[            " << i << " ][            " << j << " ] =     " << bgk_storage.a03_host(i, j) << "     \n";
+                std::cout << " a05[            " << i << " ][            " << j << " ] =     " << bgk_storage.a05_host(i, j) << "     \n";
+                std::cout << " a08[            " << i << " ][            " << j << " ] =     " << bgk_storage.a08_host(i, j) << "     \n";
+                std::cout << " a10[            " << i << " ][            " << j << " ] =     " << bgk_storage.a10_host(i, j) << "     \n";
+                std::cout << " a12[            " << i << " ][            " << j << " ] =     " << bgk_storage.a12_host(i, j) << "     \n";
+                std::cout << " a14[            " << i << " ][            " << j << " ] =     " << bgk_storage.a14_host(i, j) << "     \n";
+                std::cout << " a17[            " << i << " ][            " << j << " ] =     " << bgk_storage.a17_host(i, j) << "     \n";
+                std::cout << " a19[            " << i << " ][            " << j << " ] =     " << bgk_storage.a19_host(i, j) << "     \n";
+                std::cout << " b01[            " << i << " ][            " << j << " ] =     " << bgk_storage.b01_host(i, j) << "     \n";
+                std::cout << " b03[            " << i << " ][            " << j << " ] =     " << bgk_storage.b03_host(i, j) << "     \n";
+                std::cout << " b05[            " << i << " ][            " << j << " ] =     " << bgk_storage.b05_host(i, j) << "     \n";
+                std::cout << " b08[            " << i << " ][            " << j << " ] =     " << bgk_storage.b08_host(i, j) << "     \n";
+                std::cout << " b10[            " << i << " ][            " << j << " ] =     " << bgk_storage.b10_host(i, j) << "     \n";
+                std::cout << " b12[            " << i << " ][            " << j << " ] =     " << bgk_storage.b12_host(i, j) << "     \n";
+                std::cout << " b14[            " << i << " ][            " << j << " ] =     " << bgk_storage.b14_host(i, j) << "     \n";
+                std::cout << " b17[            " << i << " ][            " << j << " ] =     " << bgk_storage.b17_host(i, j) << "     \n";
+                std::cout << " b19[            " << i << " ][            " << j << " ] =     " << bgk_storage.b19_host(i, j) << "     \n";
+            }
+        }
+    // std::cout << "cte1:" << cte1 << "\n";
+  */  
     auto &q = *bgk_storage.host_q;
     
-    // for(int i = 0; i < bgk_storage.l; ++i) {
+    // for(int i = 1; i <= bgk_storage.l; ++i) {
+    //     // std::cout << "den[" << i << "]," << +bgk_storage.a01_host(i,jcoord) 
+    //     // <<","<< +bgk_storage.a03_host(i,jcoord) << "," << + bgk_storage.a05_host(i,jcoord)
+    //     // <<"," << + bgk_storage.a08_host(i,jcoord) << "," << + bgk_storage.a10_host(i,jcoord)
+    //     // << "," <<  + bgk_storage.a12_host(i,jcoord) << "," << + bgk_storage.a14_host(i,jcoord)
+    //     // << "," << + bgk_storage.a17_host(i,jcoord) << "," << + bgk_storage.a19_host(i,jcoord)
+    //     // << "," << + cte1 << "\n";
     //     den[i] = (bgk_storage.a01_host(i,jcoord) + bgk_storage.a03_host(i,jcoord) + bgk_storage.a05_host(i,jcoord) +
-    //     bgk_storage.a08_host(i,jcoord) + bgk_storage.a10(i,jcoord) + bgk_storage.a12_host(i,jcoord)
-    //                  + bgk_storage.a14_host(i,jcoord) + bgk_storage.a17(i,jcoord) + bgk_storage.a19(i,jcoord))
+    //     bgk_storage.a08_host(i,jcoord) + bgk_storage.a10_host(i,jcoord) + bgk_storage.a12_host(i,jcoord)
+    //                  + bgk_storage.a14_host(i,jcoord) + bgk_storage.a17_host(i,jcoord) + bgk_storage.a19_host(i,jcoord))
     //         + cte1;
+    //     // std::cout << "res: " << den[i] << "\n";
+    // }
+
+    // for(int i = 1; i <= bgk_storage.l; i++){
+    //     std::cout << std::fixed << std::setprecision(20);
+    //     std::cout << "den[" << i << "]" << "=" << den[i]<< "\n";
     // }
 
     auto event = q.parallel_for(sycl::range<1>{static_cast<size_t>(bgk_storage.l)},
@@ -45,12 +86,16 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
 
 
     // Streamwise velocity calculation
-    // for(int i = 0; i < bgk_storage.l; ++i) {
+    // for(int i = 1; i <= bgk_storage.l; ++i) {
     //     u[i] = (bgk_storage.a01_host(i,jcoord) + bgk_storage.a03_host(i,jcoord) + bgk_storage.a05_host(i,jcoord) -
-    //     bgk_storage.a10_host(i,jcoord) - bgk_storage.a12(i,jcoord) - bgk_storage.a14(i,jcoord))
+    //     bgk_storage.a10_host(i,jcoord) - bgk_storage.a12_host(i,jcoord) - bgk_storage.a14_host(i,jcoord))
     //         / den[i];
     // }
-    // Streamwise velocity calculation
+
+    // for(int i = 1; i <= bgk_storage.l; i++){
+    //     std::cout << "u[" << i << "]" << "=" << u[i]<< "\n";
+    // }
+//     // Streamwise velocity calculation
     [[maybe_unused]] auto event2 = q.submit([&](sycl::handler &cgh) {
 #ifndef SYCL_IN_ORDER_QUEUE
         cgh.depends_on(event);
@@ -67,11 +112,16 @@ void prof_i(storage &bgk_storage, const int itime, const int jcoord) {
     });
 
     // Normal-to-wall velocity calculation
-    // for(int i = 0; i < bgk_storage.l; ++i) {
+    // for(int i = 1; i <= bgk_storage.l; ++i) {
     //     v[i] = (bgk_storage.a03_host(i,jcoord) + bgk_storage.a08_host(i,jcoord) + bgk_storage.a12_host(i,jcoord) -
-    //     bgk_storage.a01_host(i,jcoord) - bgk_storage.a10(i,jcoord) - bgk_storage.a17(i,jcoord))
+    //     bgk_storage.a01_host(i,jcoord) - bgk_storage.a10_host(i,jcoord) - bgk_storage.a17_host(i,jcoord))
     //         / den[i];
     // }
+
+    // for(int i = 1; i <= bgk_storage.l; i++){
+    //     std::cout << "v[" << i << "]" << "=" << v[i]<< "\n";
+    // }
+
     [[maybe_unused]] auto event3 = q.submit([&](sycl::handler &cgh) {
 #ifndef SYCL_IN_ORDER_QUEUE
         cgh.depends_on(event2);
