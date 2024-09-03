@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iomanip>
 #include <time.hh>
+#include <kernel_utils.hh>
+#include <fmt/core.h>
 
 namespace bgk {
 void col_MC(storage &bgk_storage, const int itime) {
@@ -42,6 +44,7 @@ void col_MC(storage &bgk_storage, const int itime) {
              cteS = bgk_storage.cteS,
              omega = bgk_storage.omega,
              fgrad = bgk_storage.fgrad](sycl::item<2> id) {
+
              const auto j = id.get_id(0) + 1;
              const auto i = id.get_id(1) + 1;
              real_kinds::mykind x01, x03, x05, x08, x10;
@@ -234,15 +237,19 @@ void col_MC(storage &bgk_storage, const int itime) {
          });
 #else
     // NDRange version
+    //TODO: should be substituted with a better solution. Also I don't check for remaining elements
+    static kernel_size_t col_mc_setup(bgk_storage, bgk_storage.m * bgk_storage.l); 
+    
     const sycl::range<2> global_range(bgk_storage.m, bgk_storage.l);
-    #if defined(BGK_SYCL_LAYOUT_LEFT)
-    const sycl::range<2> local_range(1,1024); 
-    #elif defined(BGK_SYCL_LAYOUT_RIGHT)
-    const sycl::range<2> local_range(1024,1);
-    #else
-    const sycl::range<2> local_range(1,1024); //TODO: REMOVE, THE GRID COULD BE SMALLER IN OTHER USE CASES
-    #endif
 
+    #if defined(BGK_SYCL_LAYOUT_LEFT)
+    const sycl::range<2> local_range(1,col_mc_setup.sizes.block_size); 
+    #elif defined(BGK_SYCL_LAYOUT_RIGHT)
+    const sycl::range<2> local_range(col_mc_setup.sizes.block_size,1);
+    #else
+    const sycl::range<2> local_range(1, col_mc_setup.sizes.block_size); //TODO: REMOVE, THE GRID COULD BE SMALLER IN OTHER USE CASES
+    #endif
+    
     const sycl::nd_range<2> nd_range(global_range, local_range);
     
     auto event = q.submit([&](sycl::handler& cgh){
@@ -259,6 +266,7 @@ void col_MC(storage &bgk_storage, const int itime) {
              omega = bgk_storage.omega,
 	    //  ss,
              fgrad = bgk_storage.fgrad](sycl::nd_item<2> id) {
+
 	         #if defined(BGK_SYCL_LAYOUT_LEFT)
 	    	 const auto j = id.get_global_id(0) + 1;
                  const auto i = id.get_global_id(1) + 1;  
@@ -266,8 +274,8 @@ void col_MC(storage &bgk_storage, const int itime) {
  		const auto j = id.get_global_id(1) + 1;
                  const auto i = id.get_global_id(0) + 1;	
 		#else
-	         const auto j = id.get_global_id(0) + 1;
-                 const auto i = id.get_global_id(1) + 1; 
+            const auto j = id.get_global_id(0) + 1;
+            const auto i = id.get_global_id(1) + 1; 
 		 #endif
              real_kinds::mykind x01, x03, x05, x08, x10;
              real_kinds::mykind x12, x14, x17, x19;

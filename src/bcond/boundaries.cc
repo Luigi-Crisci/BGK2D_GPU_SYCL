@@ -8,7 +8,12 @@
 
 #include <fmt/core.h>
 
+
+
 namespace bgk {
+
+
+
 void boundaries(storage &bgk_storage) {
     // Different boundary conditions (selected at compile-time)
 #ifdef PERIODIC

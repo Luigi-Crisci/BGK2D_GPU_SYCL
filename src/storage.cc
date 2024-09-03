@@ -113,7 +113,6 @@ void storage::update_host() {
     _b17.unsafe_update_host();
     _b19.unsafe_update_host();
 
-    // _obs.unsafe_update_host(); //This is not used on the host after the initial allocation on the device
 
     dev_q->wait(); //TODO: CHANGE WITH MORE FINE GRAINED WAIT
     #ifdef BKG_SYCL_MALLOC_SHARED

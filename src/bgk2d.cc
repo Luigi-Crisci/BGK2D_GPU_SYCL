@@ -49,40 +49,7 @@ int main() {
     // Main loop starts here
 
     if(bgk_storage.myrank == 0) { file_manager.write(0, bgk::utils::get_date()); }
-
-    // #ifdef OFFLOAD
-    //     // #pragma omp target data map(
-    //     //     tofrom
-    //     //     : a01, a03, a05, a08, a10, a12, a14, a17, a19, &!$OMP & b01,
-    //     b03, b05, b08, b10, b12, b14, b17, obs)
-    // #endif
-
-    // Load data on device
-    // bgk_storage.update_host();
-    //     std::cout << std::fixed << std::setprecision(15);
-    //     std::cout << "Checking iteration " << 0 << "\n";
-    //     for (int i = 0; i <= bgk_storage.l; i++){
-    //         for (int j = 0; j <= bgk_storage.m; j++){
-    //             std::cout << " a01[            " << i << " ][            " << j << " ] =     " << bgk_storage.a01_host(i, j) << "     \n";
-    //             std::cout << " a03[            " << i << " ][            " << j << " ] =     " << bgk_storage.a03_host(i, j) << "     \n";
-    //             std::cout << " a05[            " << i << " ][            " << j << " ] =     " << bgk_storage.a05_host(i, j) << "     \n";
-    //             std::cout << " a08[            " << i << " ][            " << j << " ] =     " << bgk_storage.a08_host(i, j) << "     \n";
-    //             std::cout << " a10[            " << i << " ][            " << j << " ] =     " << bgk_storage.a10_host(i, j) << "     \n";
-    //             std::cout << " a12[            " << i << " ][            " << j << " ] =     " << bgk_storage.a12_host(i, j) << "     \n";
-    //             std::cout << " a14[            " << i << " ][            " << j << " ] =     " << bgk_storage.a14_host(i, j) << "     \n";
-    //             std::cout << " a17[            " << i << " ][            " << j << " ] =     " << bgk_storage.a17_host(i, j) << "     \n";
-    //             std::cout << " a19[            " << i << " ][            " << j << " ] =     " << bgk_storage.a19_host(i, j) << "     \n";
-    //             std::cout << " b01[            " << i << " ][            " << j << " ] =     " << bgk_storage.b01_host(i, j) << "     \n";
-    //             std::cout << " b03[            " << i << " ][            " << j << " ] =     " << bgk_storage.b03_host(i, j) << "     \n";
-    //             std::cout << " b05[            " << i << " ][            " << j << " ] =     " << bgk_storage.b05_host(i, j) << "     \n";
-    //             std::cout << " b08[            " << i << " ][            " << j << " ] =     " << bgk_storage.b08_host(i, j) << "     \n";
-    //             std::cout << " b10[            " << i << " ][            " << j << " ] =     " << bgk_storage.b10_host(i, j) << "     \n";
-    //             std::cout << " b12[            " << i << " ][            " << j << " ] =     " << bgk_storage.b12_host(i, j) << "     \n";
-    //             std::cout << " b14[            " << i << " ][            " << j << " ] =     " << bgk_storage.b14_host(i, j) << "     \n";
-    //             std::cout << " b17[            " << i << " ][            " << j << " ] =     " << bgk_storage.b17_host(i, j) << "     \n";
-    //             std::cout << " b19[            " << i << " ][            " << j << " ] =     " << bgk_storage.b19_host(i, j) << "     \n";
-    //         }
-    //     }
+    
     bgk_storage.update_device();
 
     for(itime = itstart + 1; itime <= itfin; ++itime) {

@@ -1,19 +1,8 @@
 #include <bcond/bcond_obs.hh>
 #include <time.hh>
 #include <file_manager.hh>
-
+#include <utils.hh>
 namespace bgk {
-
-	static constexpr inline size_t flp2 (size_t x)
-	{
-		    x = x | (x >> 1);
-		    x = x | (x >> 2);
-		    x = x | (x >> 4);
-		    x = x | (x >> 8);
-		    x = x | (x >> 16);
-		    x = x | (x >> 32);
-		    return x - (x >> 1);
-	}
 
     void bcond_obs(storage& bgk_storage){
         auto& timing = utils::timing::instance();
@@ -52,14 +41,15 @@ namespace bgk {
         });
 
         #else
-        const size_t range_j = bgk_storage.jmax - bgk_storage.jmin + 1;
-        const size_t range_i = bgk_storage.imax - bgk_storage.imin + 1;
-        const size_t range_j_pow2 = flp2(range_j);
-	const size_t range_i_pow2 = flp2(range_i);
-	const size_t local_x_size = std::min(range_j_pow2, 1024ul);
-	const size_t local_y_size = std::min(range_i_pow2, 1024ul);
-	const size_t remaining_x = range_j - range_j_pow2;
-	const size_t remaining_y = range_i - range_i_pow2;
+        //TODO: port to the new API
+        static const size_t range_j = bgk_storage.jmax - bgk_storage.jmin + 1;
+        static const size_t range_i = bgk_storage.imax - bgk_storage.imin + 1;
+        static const size_t range_j_pow2 = utils::flp2(range_j);
+        static const size_t range_i_pow2 = utils::flp2(range_i);
+        static const size_t local_x_size = std::min(range_j_pow2, 1024ul); //TODO: 1024 is a magic number
+        static const size_t local_y_size = std::min(range_i_pow2, 1024ul); //TODO: 1024 is a magic number
+        static const size_t remaining_x = range_j - range_j_pow2;
+        static const size_t remaining_y = range_i - range_i_pow2;
 
 	[[maybe_unused]] auto event = q.parallel_for(sycl::nd_range<2>({range_j_pow2, range_i_pow2}, {local_x_size,local_y_size}), [
             obs = bgk_storage.obs_device,
@@ -73,8 +63,8 @@ namespace bgk {
             a17 = bgk_storage.a17_device,
             jmin = bgk_storage.jmin,
             imin = bgk_storage.imin,
-	    remaining_x,
-	    remaining_y
+	        remaining_x = remaining_x,
+	        remaining_y = remaining_y
         ](sycl::nd_item<2> id){
             auto j = id.get_global_id(0) + jmin;
             auto i = id.get_global_id(1) + imin;

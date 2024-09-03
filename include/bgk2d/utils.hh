@@ -33,6 +33,17 @@ static inline void trim(std::string &s) {
     std::erase_if(s, [](char c) { return std::isspace(c); });
 }
 
+static constexpr inline size_t flp2 (size_t x)
+	{
+		    x = x | (x >> 1);
+		    x = x | (x >> 2);
+		    x = x | (x >> 4);
+		    x = x | (x >> 8);
+		    x = x | (x >> 16);
+		    x = x | (x >> 32);
+		    return x - (x >> 1);
+	}
+
 } // namespace bgk::utils
 
 #endif // __UTILS_H__

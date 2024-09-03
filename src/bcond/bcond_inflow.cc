@@ -1,7 +1,7 @@
 #include <bcond/bcond_inflow.hh>
 #include <file_manager.hh>
 #include <time.hh>
-
+#include <kernel_utils.hh>
 
 namespace bgk {
 void bcond_inflow(storage &bgk_storage) {
@@ -119,13 +119,15 @@ cgh.depends_on(event);
 });
 
 #else
+    
+    static kernel_size_t bcond_inflo_front_setup(bgk_storage, bgk_storage.m + 2);
+
     // loop fused for perfomance reason (on GPU)        
     // front, outflow  (x = l)
     [[maybe_unused]] const auto event = q.submit([&](sycl::handler& cgh){
-        constexpr size_t start = 0;
-        const size_t end = bgk_storage.m + 2; // m + 1 (inclusive(
-	const size_t local_size = std::min(bgk_storage.m, 1024);
-        cgh.parallel_for(sycl::nd_range({static_cast<size_t>(bgk_storage.m)}, {local_size}), [
+
+        cgh.parallel_for<class bcond_inflow_front>(sycl::nd_range({bcond_inflo_front_setup.sizes.grid_size}, 
+        {bcond_inflo_front_setup.sizes.block_size}), [
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
             a05 = bgk_storage.a05_device,
@@ -139,7 +141,8 @@ cgh.depends_on(event);
             l = bgk_storage.l,
             l1 = bgk_storage.l1,
             cte1,
-	    m = bgk_storage.m
+            m = bgk_storage.m,
+            remaining = bcond_inflo_front_setup.sizes.remaining
         ](sycl::nd_item<1> id){
             auto j = id.get_global_id(0);
             real_kinds::mykind xj,yj;
@@ -178,10 +181,10 @@ cgh.depends_on(event);
            a05(0,j) = crho*storage::p1*(cte1+cx05);
 
 	   //Remaining
-	   if ( j < 2 ) //There are two remaining
+	   if ( j < remaining ) //There are two remaining
 	   {
-		j = j + m;
-	crho  = storage::uno;
+		    j = j + m;
+	       crho  = storage::uno;
            rhoinv= storage::uno;
         // front, outflow  (x = l)
            xj = ((a03(l,j)-a12(l,j))+(a01(l,j)-a10(l,j))+(a05(l,j)-a14(l,j)))*rhoinv;
@@ -221,15 +224,12 @@ cgh.depends_on(event);
 // ----------------------------------------------
 // 
 
+static kernel_size_t bcond_inflo_left_right_setup(bgk_storage, bgk_storage.l + 2);
 q.submit([&](sycl::handler& cgh){
         #ifndef SYCL_IN_ORDER_QUEUE
 cgh.depends_on(event);
 #endif
-        
-        constexpr size_t start = 0;
-        const size_t end = bgk_storage.l + 2; // l + 1 (included)
-        const size_t local_size = std::min(bgk_storage.l, 1024);
-	cgh.parallel_for(sycl::nd_range({static_cast<size_t>(bgk_storage.l)}, {local_size}), [
+	cgh.parallel_for<class bcond_inflow_left_right>(sycl::nd_range({bcond_inflo_left_right_setup.sizes.grid_size}, {bcond_inflo_left_right_setup.sizes.block_size}), [
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
             a05 = bgk_storage.a05_device,
@@ -243,7 +243,8 @@ cgh.depends_on(event);
             m = bgk_storage.m,
             m1 = bgk_storage.m1,
             cte1,
-	    l = bgk_storage.l
+            l = bgk_storage.l,
+            remaining = bcond_inflo_left_right_setup.sizes.remaining
         ](sycl::nd_item<1> id){
             auto i = id.get_global_id(0);
             // left, noslip  (y = 0)  
@@ -255,7 +256,7 @@ cgh.depends_on(event);
            a08(i,0) = a08(i,m);
            a12(i,0) = a12(i,m);
 
-	   if (i < 2) // There are two remeaining
+	   if (i < remaining) // There are two remeaining
 	   {
 		i = i + l;
 		// left, noslip  (y = 0)  

@@ -1,11 +1,13 @@
 #include "fmt/core.h"
 #include <bcond/bcond_channel.hh>
+#include <kernel_utils.hh>
 #include <time.hh>
 
 namespace bgk{
     void bcond_channel(storage& bgk_storage){
         auto& timing = utils::timing::instance();
         real_kinds::mykind cte1;
+        
 #ifdef CHANNEL 
 
 # ifdef NOSHIFT
@@ -92,12 +94,13 @@ cgh.depends_on(event);
     });
 });
 #else
-constexpr auto local_size = 64;
+
+static kernel_size_t channel_m_setup(bgk_storage, bgk_storage.m + 2);
 
 [[maybe_unused]] const auto event = q.submit([&](sycl::handler& cgh){
-        constexpr auto start = 0;
+        // constexpr auto start = 0;
         const auto end = bgk_storage.m + 2; // m + 1 (inclusive)
-        cgh.parallel_for(sycl::nd_range<1>({static_cast<size_t>(end)}, {local_size}),
+        cgh.parallel_for(sycl::nd_range<1>({channel_m_setup.sizes.grid_size}, {channel_m_setup.sizes.block_size}),
         [
             a01 = bgk_storage.a01_device,
             a03 = bgk_storage.a03_device,
@@ -108,9 +111,11 @@ constexpr auto local_size = 64;
             a14 = bgk_storage.a14_device,
             a17 = bgk_storage.a17_device,
             l = bgk_storage.l,
-            l1 = bgk_storage.l1
+            l1 = bgk_storage.l1,
+            m = bgk_storage.m,
+            remaining = channel_m_setup.sizes.remaining
         ](sycl::nd_item<1> id){
-            const auto j = id.get_global_id(0);
+            auto j = id.get_global_id(0);
         //
         // rear, periodic bc  (x = l)
         //
@@ -124,6 +129,24 @@ constexpr auto local_size = 64;
            a01( 0,j) = a01(l,j);
            a03( 0,j) = a03(l,j);
            a05( 0,j) = a05(l,j);
+
+            if ( j < remaining ){
+                j = j + m;
+                //
+        // rear, periodic bc  (x = l)
+        //
+           a10(l1,j) = a10(1,j);
+           a12(l1,j) = a12(1,j);
+           a14(l1,j) = a14(1,j);
+        //
+        // -------------------------------------------------------------
+        // front, periodic (x = 0)
+        //           
+           a01( 0,j) = a01(l,j);
+           a03( 0,j) = a03(l,j);
+           a05( 0,j) = a05(l,j);
+            }
+
         });
     });
 
@@ -134,6 +157,8 @@ constexpr auto local_size = 64;
 // ----------------------------------------------
 //
 
+static kernel_size_t channel_l_setup(bgk_storage, bgk_storage.l + 2);
+
 q.submit([&](sycl::handler& cgh){
     #ifndef SYCL_IN_ORDER_QUEUE
 cgh.depends_on(event);
@@ -141,7 +166,7 @@ cgh.depends_on(event);
     constexpr auto start = 0;
     const auto end = bgk_storage.l + 2; // l + 1 (inclusive)
 
-    cgh.parallel_for(sycl::nd_range<1>({static_cast<size_t>(end)}, {local_size}),
+    cgh.parallel_for(sycl::nd_range<1>({channel_l_setup.sizes.grid_size}, {channel_l_setup.sizes.block_size}),
     [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
@@ -150,9 +175,11 @@ cgh.depends_on(event);
         a12 = bgk_storage.a12_device,
         a17 = bgk_storage.a17_device,
         m = bgk_storage.m,
-        m1 = bgk_storage.m1
+        m1 = bgk_storage.m1,
+        l = bgk_storage.l,
+        remaining = channel_l_setup.sizes.remaining
     ](sycl::nd_item<1> id){
-        const auto i = id.get_global_id(0);
+        auto i = id.get_global_id(0);
         // left, noslip  (y = 0)  
            a08(i  ,0)  = a17(i,1);
            a12(i+1,0)  = a01(i,1);
@@ -161,7 +188,20 @@ cgh.depends_on(event);
         // right, noslip  (y = m) 
            a10(i+1,m1) = a03(i,m);
            a17(i  ,m1) = a08(i,m);
-           a01(i-1,m1) = a12(i,m); 
+           a01(i-1,m1) = a12(i,m);
+
+           if (i < remaining){
+                i = i + l;
+                // left, noslip  (y = 0)  
+                a08(i  ,0)  = a17(i,1);
+                a12(i+1,0)  = a01(i,1);
+                a03(i-1,0)  = a10(i,1);
+
+                // right, noslip  (y = m) 
+                a10(i+1,m1) = a03(i,m);
+                a17(i  ,m1) = a08(i,m);
+                a01(i-1,m1) = a12(i,m);
+           }
     });
 });
 #endif

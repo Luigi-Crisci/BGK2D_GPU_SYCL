@@ -1,6 +1,7 @@
 #include <bcond/bcond_driven.hh>
 #include <fmt/core.h>
 #include <time.hh>
+#include <kernel_utils.hh>
 
 namespace bgk {
 
@@ -14,29 +15,6 @@ void bcond_driven(storage &bgk_storage) {
     utils::time(timing.tcountA0);
 
     force = bgk_storage.u00 / real_kinds::mykind{6.0};
-
-    // for (int i = 0; i <= bgk_storage.l; i++){
-    //         for (int j = 0; j <= bgk_storage.m; j++){
-    //             std::cout << " a01[            " << i << " ][            " << j << " ] =     " << bgk_storage.a01_host(i, j) << "     \n";
-    //             std::cout << " a03[            " << i << " ][            " << j << " ] =     " << bgk_storage.a03_host(i, j) << "     \n";
-    //             std::cout << " a05[            " << i << " ][            " << j << " ] =     " << bgk_storage.a05_host(i, j) << "     \n";
-    //             std::cout << " a08[            " << i << " ][            " << j << " ] =     " << bgk_storage.a08_host(i, j) << "     \n";
-    //             std::cout << " a10[            " << i << " ][            " << j << " ] =     " << bgk_storage.a10_host(i, j) << "     \n";
-    //             std::cout << " a12[            " << i << " ][            " << j << " ] =     " << bgk_storage.a12_host(i, j) << "     \n";
-    //             std::cout << " a14[            " << i << " ][            " << j << " ] =     " << bgk_storage.a14_host(i, j) << "     \n";
-    //             std::cout << " a17[            " << i << " ][            " << j << " ] =     " << bgk_storage.a17_host(i, j) << "     \n";
-    //             std::cout << " a19[            " << i << " ][            " << j << " ] =     " << bgk_storage.a19_host(i, j) << "     \n";
-    //             std::cout << " b01[            " << i << " ][            " << j << " ] =     " << bgk_storage.b01_host(i, j) << "     \n";
-    //             std::cout << " b03[            " << i << " ][            " << j << " ] =     " << bgk_storage.b03_host(i, j) << "     \n";
-    //             std::cout << " b05[            " << i << " ][            " << j << " ] =     " << bgk_storage.b05_host(i, j) << "     \n";
-    //             std::cout << " b08[            " << i << " ][            " << j << " ] =     " << bgk_storage.b08_host(i, j) << "     \n";
-    //             std::cout << " b10[            " << i << " ][            " << j << " ] =     " << bgk_storage.b10_host(i, j) << "     \n";
-    //             std::cout << " b12[            " << i << " ][            " << j << " ] =     " << bgk_storage.b12_host(i, j) << "     \n";
-    //             std::cout << " b14[            " << i << " ][            " << j << " ] =     " << bgk_storage.b14_host(i, j) << "     \n";
-    //             std::cout << " b17[            " << i << " ][            " << j << " ] =     " << bgk_storage.b17_host(i, j) << "     \n";
-    //             std::cout << " b19[            " << i << " ][            " << j << " ] =     " << bgk_storage.b19_host(i, j) << "     \n";
-    //         }
-    //     }
 
 #ifdef TRICK1
     // it is correct only if l=m
@@ -135,7 +113,9 @@ cgh.depends_on(event);
 
 #else
 
-[[maybe_unused]] auto event = q.parallel_for<class bcond_driven_front_rear>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.m)}, {1024}), 
+static kernel_size_t bcond_driven_front_rear_setup(bgk_storage, bgk_storage.m);
+
+[[maybe_unused]] auto event = q.parallel_for<class bcond_driven_front_rear>(sycl::nd_range<1>({bcond_driven_front_rear_setup.sizes.grid_size}, {bcond_driven_front_rear_setup.sizes.block_size}), 
 [
     a01 = bgk_storage.a01_device,
     a03 = bgk_storage.a03_device,
@@ -143,10 +123,12 @@ cgh.depends_on(event);
     a10 = bgk_storage.a10_device,
     a12 = bgk_storage.a12_device,
     a14 = bgk_storage.a14_device,
+    m = bgk_storage.m,
     l1 = bgk_storage.l1,
-    l = bgk_storage.l
+    l = bgk_storage.l,
+    remaining = bcond_driven_front_rear_setup.sizes.remaining
 ](sycl::nd_item<1> id){
-    const auto j = id.get_global_linear_id() + 1;
+    auto j = id.get_global_linear_id() + 1;
     // front (x = l)
     a12(l1,j-1) = a01(l,j);
     a10(l1,j+1) = a03(l,j);
@@ -156,13 +138,30 @@ cgh.depends_on(event);
     a03(0,j-1) = a10(1,j);
     a01(0,j+1) = a12(1,j);
     a05(0,j) = a14(1,j);
+
+    if (j < remaining){
+        j = j + m;
+        // front (x = l)
+        a12(l1,j-1) = a01(l,j);
+        a10(l1,j+1) = a03(l,j);
+        a14(l1,j) = a05(l,j);
+
+        // rear (x = 0)
+        a03(0,j-1) = a10(1,j);
+        a01(0,j+1) = a12(1,j);
+        a05(0,j) = a14(1,j);
+    }
+
 });
+
+static kernel_size_t bcond_driven_left_right_setup(bgk_storage, bgk_storage.l);
+
 
 event = q.submit([&](sycl::handler& cgh){
     #ifndef SYCL_IN_ORDER_QUEUE
 cgh.depends_on(event);
 #endif
-    cgh.parallel_for<class bcond_driven_left_right>(sycl::nd_range<1>({static_cast<size_t>(bgk_storage.l)}, {1024}), 
+    cgh.parallel_for<class bcond_driven_left_right>(sycl::nd_range<1>({bcond_driven_left_right_setup.sizes.grid_size}, {bcond_driven_left_right_setup.sizes.block_size}), 
     [
         a01 = bgk_storage.a01_device,
         a03 = bgk_storage.a03_device,
@@ -170,11 +169,13 @@ cgh.depends_on(event);
         a10 = bgk_storage.a10_device,
         a12 = bgk_storage.a12_device,
         a17 = bgk_storage.a17_device,
+        l = bgk_storage.l,
         m1 = bgk_storage.m1,
         m = bgk_storage.m,
-        force
+        force,
+        remaining = bcond_driven_left_right_setup.sizes.remaining
     ](sycl:: nd_item<1> id){
-        const auto i = id.get_global_linear_id() + 1;
+        auto i = id.get_global_linear_id() + 1;
     // left (y = 0)  
         a08(i  ,0)  = a17(i,1);
         a12(i+1,0)  = a01(i,1);
@@ -184,6 +185,20 @@ cgh.depends_on(event);
         a10(i+1,m1) = a03(i,m) - force;
         a17(i  ,m1) = a08(i,m);
         a01(i-1,m1) = a12(i,m) + force;
+
+        if (i < remaining){
+            i = i + l;
+            // left (y = 0)  
+            a08(i  ,0)  = a17(i,1);
+            a12(i+1,0)  = a01(i,1);
+            a03(i-1,0)  = a10(i,1);
+
+        // right (y = m) lid-wall
+            a10(i+1,m1) = a03(i,m) - force;
+            a17(i  ,m1) = a08(i,m);
+            a01(i-1,m1) = a12(i,m) + force;
+        }
+
     });
 });
 
