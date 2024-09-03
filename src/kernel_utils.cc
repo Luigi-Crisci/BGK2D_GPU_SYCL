@@ -21,9 +21,6 @@ namespace bgk{
     kernel_size_t::kernel_size_t(storage& s, int val) {
         get_max_block_size(s);
         sizes = set_local_size(val);
-        fmt::print("DEBUG: kernel_size_t::kernel_size_t: sizes.grid_size = {}\n", sizes.grid_size);
-        fmt::print("DEBUG: kernel_size_t::kernel_size_t: sizes.block_size = {}\n", sizes.block_size);
-        fmt::print("DEBUG: kernel_size_t::kernel_size_t: sizes.remaining = {}\n", sizes.remaining);
     }
 
 }
