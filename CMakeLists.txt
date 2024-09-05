@@ -254,6 +254,7 @@ include/bgk2d/col_MC.hh
 include/bgk2d/precision.hh
 include/bgk2d/restore_raw.hh
 include/bgk2d/draglift.hh
+include/bgk2d/kernel_utils.hh
     )
 
 set(source_files
@@ -301,6 +302,7 @@ src/bgk2d.cc
 src/check_case.cc
 src/w_obs.cc
 src/draglift.cc
+src/kernel_utils.cc
     )
 
 add_executable(bgk2dSYCL ${header_files} ${source_files})
