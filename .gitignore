@@ -4,6 +4,7 @@ build/
 .clangd
 
 # Fortran code
+fortran/RUN/*.x
 *.o
 *.mod
 
@@ -12,5 +13,6 @@ build/
 *.log
 *.vtk
 
-benchmark/*
+
+benchmark/
 .bgk2d_venv/
